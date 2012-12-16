@@ -11,18 +11,18 @@
  
     <http use-expressions="true">
 	    <intercept-url pattern="/index.jsp" access="permitAll" />
- 		<intercept-url pattern="/**" access="hasRole('administrator')" />
+ 		<intercept-url pattern="/**" access="hasRole('ROLE_ADMINISTRATOR')" />
         <form-login />
         <logout />
     </http>
 
     <authentication-manager>
-        <authentication-provider>
-            <user-service>
+        <authentication-provider user-service-ref="recipeUserDetailsService">
+           <!--  <user-service>
                 <user name="mherb" password="havefun" authorities="administrator,supervisor,user,customer" />
                 <user name="cherb" password="cherb" authorities="administrator,supervisor,user,customer" />
                 <user name="rherb" password="havefun" authorities="user" />
-            </user-service>
+            </user-service> -->
         </authentication-provider>
     </authentication-manager>
 </beans:beans>   

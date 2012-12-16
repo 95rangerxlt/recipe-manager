@@ -33,12 +33,12 @@ public class RecipeService {
 	
 	public Recipe update(Recipe recipe) {
 		if (!recipeRepository.exists(recipe.getRecipeId())) {
-			return null;
+			throw new RecipeDoesNotExistException(recipe.getRecipeId());
 		}
 		return recipeRepository.save(recipe);
 	}
 	
-	public Recipe get(String id) throws RecipeDoesNotExistException {
+	public Recipe get(String id) {
 		if (! recipeRepository.exists(id)) {
 			throw new RecipeDoesNotExistException(id);
 		}
