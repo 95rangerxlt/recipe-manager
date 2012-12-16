@@ -1,22 +1,4 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-<title>Recipe Manager</title>
-<link rel="stylesheet" href="resources/css/styles.css" />
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/base/jquery-ui.css" />
-<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.10/themes/pepper-grinder/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/css/jquery.dataTables.css">
-<link rel="stylesheet" href="resources/css/demo_table_jui.css" />
-
-<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.23/jquery-ui.min.js" type="text/javascript"></script>
-<script type="text/javascript" charset="utf8" src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js"></script>
-
-
-</head>
-
-<body>
-
+<%@ include file="/resources/frameworks/topFramework.html" %>
 <div id="content" style="width:90%;">
     <h1>Welcome to My Recipe Manager</h1>
 	<div style="float:left;margin:10px;"><button id="logoutButton">Logout</button></div>  
@@ -70,7 +52,7 @@
 </div>
 
 
-</body>
+<%@ include file="/resources/frameworks/bottomFramework.html" %>
 
  <script>
  // globals
@@ -284,6 +266,5 @@ function validate() {
 
  </script>
  
- </html>
 
 
