@@ -25,14 +25,14 @@ public class UserServiceImpl implements UserService {
 	public User findByUserName(String userName) {
 		User user = userRepository.findByUserName(userName);
 		if (user == null) {
-			throw new UsernameNotFoundException("user: " + userName + "does not exist");
+			throw new UsernameNotFoundException("user: " + userName + " does not exist");
 		}
 		return user;
 	}
 
 	public User updateUser(User user) {
 		if (!userRepository.exists(user.getId())) {
-			throw new UsernameNotFoundException("user: " + user.getUserName() + "does not exist");
+			throw new UsernameNotFoundException("user: " + user.getUserName() + " catidoes not exist");
 		}
 		return userRepository.save(user);
 	}

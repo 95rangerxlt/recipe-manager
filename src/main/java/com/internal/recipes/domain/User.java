@@ -18,6 +18,8 @@ public class User {
 	private String firstName;
 	private String lastName;
 	
+	// ouch...define a default ctor so Jackson can map incoming json to this object, forget to do this and your're in HTTP 440 hell
+	public User() {}
 	
 	public String getId() {
 		return id;

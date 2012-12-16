@@ -17,10 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.internal.recipes.domain.Recipe;
 import com.internal.recipes.domain.Role;
 import com.internal.recipes.domain.User;
-import com.internal.recipes.service.RecipeDoesNotExistException;
 import com.internal.recipes.service.UserService;
 
 @Controller

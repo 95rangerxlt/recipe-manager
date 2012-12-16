@@ -177,7 +177,7 @@ function showRecipeDeleteForm(recipeId) {
 	  $("#recipeDeleteFormErrors").append("<div class=\"error\">" + html + "</div>");
 
 	  $("#recipeDeleteFormErrors").show();
-	  $("#recipeDeleteForm").dialog("option", "title", "Delete User");
+	  $("#recipeDeleteForm").dialog("option", "title", "Delete Recipe");
 	  $('#recipeDeleteForm').dialog('open');
 }
 

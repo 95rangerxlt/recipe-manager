@@ -56,6 +56,11 @@
   </tbody></table>
 </div>
 
+<div id="userDeleteForm" title="" style="display:none;margin-top:5px;">
+  <input type="text" style="display:none" id="userDeleteFormUserName" value="0" />
+  <div id="userDeleteFormErrors" style="display:none;margin:0px;"></div>
+</div>
+
 <%@ include file="/resources/frameworks/bottomFramework.html" %>
 
  <script>
@@ -213,6 +218,7 @@ function processSubmit() {
 		var idArray = value.id.split("userRole_");
 		roles.push(idArray[1]);
 	});
+	user.roles = new Object;
 	user.roles = roles;
 	user.userName = $("#userName").val();
 	user.emailAddress = $("#emailAddress").val();
@@ -226,11 +232,16 @@ function processSubmit() {
 	$.ajax({
 	       type: type,
 	       url: 'users',
-	       contentType: "application/json",
-	       dataType: "json",
+           contentType: "application/json; charset=utf-8",
+           dataType: "json",
 	       data: JSON.stringify(user),
 	       success: function(data) {processSubmitResults(data, type);},
-	       error : function(request, status, error) {console.log(JSON.stringify(user)); alert("Failed: " + error);}
+	       error: function(xhr,err) {
+	    	   alert("post data: " + JSON.stringify(user));
+	    	   alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
+	    	   alert("responseText: "+xhr.responseText);
+	    	}
+	       
 	});			    
 }
 function validate() {
@@ -311,6 +322,18 @@ function processSubmitResults(user, type) {
 		addUserRow(user);
 }
 
+function showUserDeleteForm(userId, userName) {
+	  var userFullName = $("#" + userId + "_fullName").html();
+	  var html = "You are about to delete the following User <table style=\"margin-top:15px;\" border=\"1\" width=\"350\"><tr><th>ID</th><th>Username</th><th>Full Name</th</tr><tr><td>" + userId + "</td><td>" + userName + "</td><td>" + userFullName + "</td></tr></table><p style=\"margin-top:10px;font-weight:bold;\"><h2>Are you sure?</h2></p>"; 
+	  console.log(html);
+	  
+	  $("#userDeleteFormErrors").html("");
+	  $("#userDeleteFormErrors").append("<div class=\"error\">" + html + "</div>");
+
+	  $("#userDeleteFormErrors").show();
+	  $("#userDeleteForm").dialog("option", "title", "Delete User");
+	  $('#userDeleteForm').dialog('open');
+}
 
 
 </script>
