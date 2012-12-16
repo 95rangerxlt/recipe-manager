@@ -8,6 +8,7 @@
  
     <http pattern="/css/**" security="none" /> 
     <http pattern="/images/**" security="none" /> 
+    <http pattern="/frameworks/**" security="none" /> 
  
     <http use-expressions="true">
 	    <intercept-url pattern="/index.jsp" access="permitAll" />
@@ -18,11 +19,6 @@
 
     <authentication-manager>
         <authentication-provider user-service-ref="recipeUserDetailsService">
-           <!--  <user-service>
-                <user name="mherb" password="havefun" authorities="administrator,supervisor,user,customer" />
-                <user name="cherb" password="cherb" authorities="administrator,supervisor,user,customer" />
-                <user name="rherb" password="havefun" authorities="user" />
-            </user-service> -->
         </authentication-provider>
     </authentication-manager>
 </beans:beans>   

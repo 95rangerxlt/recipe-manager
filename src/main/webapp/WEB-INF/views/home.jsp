@@ -1,7 +1,8 @@
 <%@ include file="/resources/frameworks/topFramework.html" %>
 <div id="content" style="width:90%;">
-    <h1>Welcome to My Recipe Manager</h1>
+    <h2>Recipe Administration</h2>
 	<div style="float:left;margin:10px;"><button id="logoutButton">Logout</button></div>  
+	<div style="float:left;margin:10px;"><button id="usersButton">Users</button></div>  
     <div style="float:right;margin:10px;"><button id="addRecipeButton">Add Recipe</button></div>  
 
 	<table border="0" class="display" id="recipesTable" >
@@ -20,7 +21,6 @@
 	</tbody>
 	</table>
 </div>
-
 
 
 <style type="text/css">
@@ -63,6 +63,8 @@ $(document).ready(function () {
   $("#addRecipeButton").click(function() { showRecipeForm(0); return false; });
   $("#logoutButton").button();
   $("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });
+  $("#usersButton").button();
+  $("#usersButton").click(function() { location.href = 'userManager'; });
   recipeFormInit();
 
 	recipesTable = $('#recipesTable').dataTable({
