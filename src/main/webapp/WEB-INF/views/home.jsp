@@ -2,6 +2,7 @@
 <div id="content" style="width:90%;">
     <h2>Recipe Administration</h2>
 	<div style="float:left;margin:10px;"><button id="logoutButton">Logout</button></div>  
+	<div style="float:left;margin:10px;"><button id="eventLogButton">Event Log</button></div>  
 	<div style="float:left;margin:10px;"><button id="usersButton">Users</button></div>  
     <div style="float:right;margin:10px;"><button id="addRecipeButton">Add Recipe</button></div>  
 
@@ -61,6 +62,8 @@
 $(document).ready(function () {
   $("#addRecipeButton").button();
   $("#addRecipeButton").click(function() { showRecipeForm(0); return false; });
+  $("#eventLogButton").button();
+  $("#eventLogButton").click(function() { location.href = 'eventLogManager'; });
   $("#logoutButton").button();
   $("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });
   $("#usersButton").button();

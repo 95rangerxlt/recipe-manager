@@ -1,5 +1,6 @@
 package com.internal.recipes;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,9 +17,13 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.internal.recipes.domain.EventLog;
 import com.internal.recipes.domain.Recipe;
+import com.internal.recipes.domain.User;
+import com.internal.recipes.service.EventLogService;
 import com.internal.recipes.service.RecipeDoesNotExistException;
 import com.internal.recipes.service.RecipeService;
+import com.internal.recipes.service.UserService;
 
 @Controller
 @RequestMapping(value = "/recipes")
@@ -26,6 +31,12 @@ public class RecipeController {
 
 	@Autowired
 	private RecipeService recipeService;
+	
+	@Autowired
+	private EventLogService eventLogService;
+	
+	@Autowired
+	private UserService userService;
 
 	private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
@@ -43,24 +54,42 @@ public class RecipeController {
 
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public @ResponseBody Recipe create(@RequestBody final Recipe entity) {
+	public @ResponseBody Recipe create(@RequestBody final Recipe entity, Principal p) {
 		logger.info("Request to create a recipe");
+
+		User thisUser = userService.findByUserName(p.getName());
+		String logData = "created recipe " + entity.getTitle();
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		eventLogService.create(el);
+		
 		return recipeService.create(entity);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody Recipe update(@RequestBody final Recipe entity) throws RecipeDoesNotExistException{
+	public @ResponseBody Recipe update(@RequestBody final Recipe entity, Principal p) throws RecipeDoesNotExistException{
 		logger.info("Request to update a recipe");
+
+		User thisUser = userService.findByUserName(p.getName());
+		String logData = "modified recipe " + entity.getTitle();
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		eventLogService.create(el);
+
 		return recipeService.update(entity);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteRecipe(@PathVariable("id") final String id) throws RecipeDoesNotExistException{
+	public void deleteRecipe(@PathVariable("id") final String id, Principal p) throws RecipeDoesNotExistException{
 		logger.info("Request to delete a recipe");
-		Recipe recipe = new Recipe();
-		recipe.setRecipeId(id);
+		
+		Recipe recipe = recipeService.get(id);
+
+		User thisUser = userService.findByUserName(p.getName());
+		String logData = "deleted recipe " + recipe.getTitle();
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		eventLogService.create(el);
+
 		recipeService.delete(recipe);
 	}
 	

@@ -2,6 +2,7 @@
 <div id="content" style="width:90%;">
     <h2>User Administration</h2>
 	<div style="float:left;margin:10px;"><button id="logoutButton">Logout</button></div>  
+	<div style="float:left;margin:10px;"><button id="eventLogButton">Event Log</button></div>  
 	<div style="float:left;margin:10px;"><button id="recipesButton">Recipes</button></div>  
     <div style="float:right;margin:10px;"><button id="addUserButton">Add User</button></div>  
 
@@ -74,6 +75,8 @@
 $(document).ready(function () {
   $("#logoutButton").button();
   $("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });
+  $("#eventLogButton").button();
+  $("#eventLogButton").click(function() { location.href = 'eventLogManager'; });
   $("#recipesButton").button();
   $("#recipesButton").click(function() { location.href = 'recipeManager'; });
   $("#addUserButton").button();
@@ -277,9 +280,9 @@ function validate() {
 		    returnVal = false;		  
 	  }
 
-	  // userName must be at least 6 chars
+	  // userName must be at least 5 chars
 	  if ($("#userName").val() && $("#userName").val().length < 5) {
-	    $("#userFormErrors").append("<div class=\"error\">Minimum of 6 characters required for the user's <b>User Name</b>.</div>");
+	    $("#userFormErrors").append("<div class=\"error\">Minimum of 5 characters required for the user's <b>User Name</b>.</div>");
 	    returnVal = false;
 	  }
 	  

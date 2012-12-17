@@ -1,5 +1,6 @@
 package com.internal.recipes;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -17,10 +18,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.internal.recipes.domain.Recipe;
 import com.internal.recipes.domain.Role;
 import com.internal.recipes.domain.User;
-import com.internal.recipes.service.RecipeDoesNotExistException;
+import com.internal.recipes.domain.EventLog;
+import com.internal.recipes.service.EventLogService;
 import com.internal.recipes.service.UserService;
 
 @Controller
@@ -30,47 +31,68 @@ public class UserController {
 	@Autowired
 	UserService userService;
 	
+	@Autowired
+	EventLogService eventLogService;
+	
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public @ResponseBody List<User> getAllUsers() {
-		logger.info("Request to get all users.");
+	public @ResponseBody List<User> getAllUsers(Principal p) {
+		logger.info("User {}::Request to get all users.", p.getName());
 		return userService.getAllUsers();
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
-	public @ResponseBody User create(@RequestBody final User entity) {
-		logger.info("Request to create a user");
+	public @ResponseBody User create(@RequestBody final User entity, Principal p) {
+		logger.info("User {}::Request to create a user", p.getName());
+		
+		User thisUser = userService.findByUserName(p.getName());
+		String logData = "created user " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		eventLogService.create(el);
+		
 		return userService.createUser(entity);
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody User update(@RequestBody final User entity) {
-		logger.info("Request to update a user");
+	public @ResponseBody User update(@RequestBody final User entity, Principal p) {
+		logger.info("User {}::Request to update a user", p.getName());
+
+		User thisUser = userService.findByUserName(p.getName());
+		String logData = "modified user " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		eventLogService.create(el);		
+		
 		return userService.updateUser(entity);
 	}
 	
 	@RequestMapping(value = "/{userName}", method = RequestMethod.GET)
-	public @ResponseBody User getUser(@PathVariable("userName") final String userName) {
-		logger.info("Request to get a user with userName: {}", userName);
+	public @ResponseBody User getUser(@PathVariable("userName") final String userName, Principal p) {
+		logger.info("User {}::Request to get a user with userName: {}", p.getName(), userName);
 		return userService.findByUserName(userName);
 	}
 	
 	@RequestMapping(value = "/{userName}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteUser(@PathVariable("userName") final String userName) {
-		logger.info("Request to delete a user");
-		User user = new User();
-		user.setUserName(userName);		
-		userService.deleteUser(user);
+	public void deleteUser(@PathVariable("userName") final String userName, Principal p) {
+		logger.info("User {}::Request to delete a user", p.getName());
+		
+		User u = userService.findByUserName(userName);	
+
+		User thisUser = userService.findByUserName(p.getName());
+		String logData = "deleted user " + u.getUserName() + " " + u.getFirstName() + " " + u.getLastName() + " " + u.getEmailAddress();
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		eventLogService.create(el);		
+
+		userService.deleteUser(u);
 	}
 	
 	@RequestMapping(value = "/roles", method = RequestMethod.GET)
 	@ResponseStatus(HttpStatus.OK)
-	public @ResponseBody Role[] getRoles() {
-		logger.info("Request to get defined roles");
+	public @ResponseBody Role[] getRoles(Principal p) {
+		logger.info("User {}::Request to get defined roles", p.getName());
 		return Role.values();
 	}
 	

@@ -51,5 +51,11 @@ public class HomeController {
 		logger.info("Request for the recipeManager");		
 		return "home";
 	}
+
+	@RequestMapping(value = "eventLogManager", method = RequestMethod.GET)
+	public String eventLogManager(Locale locale, Model model) {
+		logger.info("Request for the eventLogManager");		
+		return "eventLogManager";
+	}
 	
 }
