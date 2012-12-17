@@ -23,7 +23,9 @@
 </div>
 
 <div id="userForm" title="" style="display:none;margin-top:5px;">
-  <input type="text" style="display:none" id="userId" value="0" />
+  <input type="text" style="display:none" value="POST" id="userFormOperationType" />
+  <input type="text" style="display:none" value="" id="userFormUserId" />
+  <input type="text" style="display:none" value="" id="userFormUserName" />
   <div id="userFormErrors" style="display:none;margin:0px;"></div>
   <table width="100%" cellspacing="0" cellpadding="0"><tbody>
     <tr><td colspan="3" style="height:20px;color:blue;font-size:1.1em;">General</td></tr>  
@@ -75,7 +77,7 @@ $(document).ready(function () {
   $("#recipesButton").button();
   $("#recipesButton").click(function() { location.href = 'recipeManager'; });
   $("#addUserButton").button();
-  $("#addUserButton").click(function() { showUserForm("", ""); return false; });
+  $("#addUserButton").click(function() { showUserForm("", "", "POST"); return false; });
   userFormInit();
 
 	usersTable = $('#usersTable').dataTable({
@@ -131,7 +133,6 @@ function userFormInit() {
 }
 
 function processUserList(users) {
-	console.log(JSON.stringify(users));
 	$.each(users, function(i, user) {
 		addUserRow(user);
 	});
@@ -143,7 +144,7 @@ function addUserRow(user) {
 		roleString += "<div>" + role + "</div>";
 	});
 	
-    var mlink = '<div style="margin-top:3px;"><a href="javascript:showUserForm(' + "'" + user.id +  "'," + "'" + user.userName +  "'" + ');">Modify</a></div>';
+    var mlink = '<div style="margin-top:3px;"><a href="javascript:showUserForm(' + "'" + user.id +  "'," + "'" + user.userName +  "'," + "'" + 'PUT' + "'" + ');">Modify</a></div>';
     var dlink = '<div style="margin-top:3px;"><a href="javascript:showUserDeleteForm(' + "'" + user.id +  "'," + "'" + user.userName + "'" + ');">Delete</a></div>';
     var newRow = usersTable.dataTable().fnAddData([user.id,
                                                    user.userName,
@@ -162,14 +163,15 @@ function addUserRow(user) {
     newTr.cells[4].id = idp + "roles";		
 }
 
-function showUserForm(userId, userName) {
-	 $("#userId").val(userId); 
+function showUserForm(userId, userName, type) {
+	 $("#userFormOperationType").val(type);
+	 $("#userFormUserId").val(userId); 
 	 $("#userFormErrors").html("");
 	 if (userName == "")  {  // show the create form
 		$("#userName").prop('disabled', false);
 		$("#firstName").val("");
 		$("#lastName").val("");
-		$("#email").val("");
+		$("#emailAddress").val("");
 		$("#password").val("");
 		$("#passwordConfirm").val("");
 		$("#userName").val("");
@@ -185,7 +187,7 @@ function showUserForm(userId, userName) {
 	        error : function(request, status, error) {alert("Failed: " + error);}
 		});		
 	 }  
-	  // fill out the customer access table using the data received here
+	  // fill out the user access table using the data received here
 	  $("#userRolesTable > tbody").html("");
 	  var count = 0;
 	  var htmlToInsert = "";  
@@ -211,7 +213,6 @@ function processSubmit() {
 	$("#userFormErrors").append("<div class=\"success\">Saving...</div>");
 	
 	user = new Object();
-	user.id = $("#userId").val();
 	user.password = $("#password").val();
 	var roles = [];
 	$('input[id^="userRole_"]:checked').each(function (index, value) {
@@ -224,10 +225,10 @@ function processSubmit() {
 	user.emailAddress = $("#emailAddress").val();
 	user.firstName = $("#firstName").val();
 	user.lastName = $("#lastName").val();	
-	
-	console.log(user);
-	
-	var type = userName == "" ? "POST" : "PUT";
+		
+	var type = $("#userFormOperationType").val();
+	if (type == 'PUT')
+		user.id = $("#userFormUserId").val();
 	
 	$.ajax({
 	       type: type,
@@ -285,8 +286,7 @@ function validate() {
 	  return returnVal;
 }
 function processGetUserResults(user){
-	console.log(JSON.stringify(user));
-	$("#userId").val(user.id);
+	$("#userFormUserId").val(user.id);
 	$("#firstName").val(user.firstName);
 	$("#lastName").val(user.lastName);
 	$("#emailAddress").val(user.emailAddress);
@@ -301,17 +301,12 @@ function processGetUserResults(user){
 }
 function processSubmitResults(user, type) {	
 	$('#userForm').dialog('close');
-    newTr.cells[0].id = idp + "id";
-    newTr.cells[1].id = idp + "userName";
-    newTr.cells[2].id = idp + "fullName";
-    newTr.cells[3].id = idp + "emailAddress";
-    newTr.cells[4].id = idp + "roles";		
-	
+
 	if (type == 'PUT') {
 		var idp = user.id + "_";
 		$("#" + idp + "userName").html(user.userName);
 		$("#" + idp + "fullName").html(user.firstName + " " + user.lastName);
-		$("#" + idp + "email").html(user.email);
+		$("#" + idp + "emailAddress").html(user.emailAddress);
 		var roles = "";
 		$.each(user.roles,function(index, value) {
 			roles += "<div>" + value + "</div>";
@@ -323,9 +318,11 @@ function processSubmitResults(user, type) {
 }
 
 function showUserDeleteForm(userId, userName) {
+	  $("#userFormUserId").val(userId);
+	  $("#userFormUserName").val(userName);
+	  
 	  var userFullName = $("#" + userId + "_fullName").html();
 	  var html = "You are about to delete the following User <table style=\"margin-top:15px;\" border=\"1\" width=\"350\"><tr><th>ID</th><th>Username</th><th>Full Name</th</tr><tr><td>" + userId + "</td><td>" + userName + "</td><td>" + userFullName + "</td></tr></table><p style=\"margin-top:10px;font-weight:bold;\"><h2>Are you sure?</h2></p>"; 
-	  console.log(html);
 	  
 	  $("#userDeleteFormErrors").html("");
 	  $("#userDeleteFormErrors").append("<div class=\"error\">" + html + "</div>");
@@ -333,6 +330,34 @@ function showUserDeleteForm(userId, userName) {
 	  $("#userDeleteFormErrors").show();
 	  $("#userDeleteForm").dialog("option", "title", "Delete User");
 	  $('#userDeleteForm').dialog('open');
+}
+
+function processDeleteUserSubmit() {
+	var userId =  $("#userFormUserId").val();
+	var userName = $("#userFormUserName").val();
+	
+	$.ajax({
+        type: 'DELETE',
+        url: 'users/' + userName,
+        contentType: "application/json",
+        dataType: "json",
+        success: function(data) {processDeleteUserSubmitResults(data, userId);},
+        error : function(request, status, error) {alert("Failed: " + error);}
+	});			
+}
+
+function processDeleteUserSubmitResults(data, userId) {
+	$('#userDeleteForm').dialog('close');
+
+	// remove this user from the table
+	var searchId = userId + "_userId";
+	var allTrs = usersTable.fnGetNodes();
+	for (var i=0; i<allTrs.length ; i++ ) {
+	  if (allTrs[i].cells[0].id == searchId) {
+	    usersTable.fnDeleteRow(allTrs[i]);
+	    break;
+	  }
+	}
 }
 
 

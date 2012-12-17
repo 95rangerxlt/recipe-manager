@@ -31,17 +31,19 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public User updateUser(User user) {
-		if (!userRepository.exists(user.getId())) {
-			throw new UsernameNotFoundException("user: " + user.getUserName() + " catidoes not exist");
+		User u = findByUserName(user.getUserName());
+		if (u == null) {
+			throw new UsernameNotFoundException("user: " + user.getUserName() + " does not exist");			
 		}
 		return userRepository.save(user);
 	}
 
 	public Boolean deleteUser(User user) {
-		if (!userRepository.exists(user.getId())) {
-			return false;
+		User u = findByUserName(user.getUserName());
+		if (u == null) {
+			throw new UsernameNotFoundException("user: " + user.getUserName() + " does not exist");			
 		}
-		userRepository.delete(user);
+		userRepository.delete(u);
 		return true;
 	}
 

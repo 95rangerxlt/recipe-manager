@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import com.internal.recipes.domain.Recipe;
 import com.internal.recipes.domain.Role;
 import com.internal.recipes.domain.User;
+import com.internal.recipes.service.RecipeDoesNotExistException;
 import com.internal.recipes.service.UserService;
 
 @Controller
@@ -54,6 +56,15 @@ public class UserController {
 	public @ResponseBody User getUser(@PathVariable("userName") final String userName) {
 		logger.info("Request to get a user with userName: {}", userName);
 		return userService.findByUserName(userName);
+	}
+	
+	@RequestMapping(value = "/{userName}", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.OK)
+	public void deleteUser(@PathVariable("userName") final String userName) {
+		logger.info("Request to delete a user");
+		User user = new User();
+		user.setUserName(userName);		
+		userService.deleteUser(user);
 	}
 	
 	@RequestMapping(value = "/roles", method = RequestMethod.GET)
