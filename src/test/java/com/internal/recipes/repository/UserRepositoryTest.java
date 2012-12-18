@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 import com.internal.recipes.domain.Role;
 import com.internal.recipes.domain.User;
@@ -47,7 +48,7 @@ public class UserRepositoryTest {
 	
 	@Test
 	public void createUsers() {
-		User user = new User("mherb", "havefun");
+		User user = new User("mherb", new StandardPasswordEncoder().encode("havefun"));
 		user.setFirstName("Michael");
 		user.getRoles().add(Role.ROLE_ADMINISTRATOR);
 		

@@ -22,16 +22,18 @@
     	<logout success-handler-ref="authLogoutSucc" />
     </http>
     
-
     <authentication-manager>
-        <authentication-provider user-service-ref="recipeUserDetailsService">
-        </authentication-provider>
+       <authentication-provider user-service-ref="recipeUserDetailsService" >
+          <password-encoder ref="passEncoder"/>
+      </authentication-provider>
     </authentication-manager>
 
+	
 <beans:bean class="com.internal.recipes.security.AuthenticationSuccessHandler" name="authSucc"></beans:bean>
 <beans:bean class="com.internal.recipes.security.AuthenticationFailureHandler" name="authFail"></beans:bean>
-<beans:bean class="com.internal.recipes.security.AuthenticationLogoutSucessHandler" name="authLogoutSucc"></beans:bean>
-    
+<beans:bean class="com.internal.recipes.security.AuthenticationLogoutSucessHandler" name="authLogoutSucc"></beans:bean>   
+<beans:bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" name="passEncoder" ></beans:bean>
+
 </beans:beans>
 
 
