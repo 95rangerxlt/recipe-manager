@@ -50,8 +50,7 @@ public class UserRepositoryTest {
 	public void createUsers() {
 		User user = new User("mherb", new StandardPasswordEncoder().encode("havefun"));
 		user.setFirstName("Michael");
-		user.getRoles().add(Role.ROLE_ADMINISTRATOR);
-		
+		user.getRoles().add(Role.ROLE_ADMINISTRATOR);		
 		userRepository.save(user);
 		
 	}
