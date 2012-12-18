@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.internal.recipes.domain.Role;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.domain.EventLog;
+import com.internal.recipes.security.RecipeUserDetails;
 import com.internal.recipes.service.EventLogService;
 import com.internal.recipes.service.UserService;
 
@@ -45,9 +47,11 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public @ResponseBody User create(@RequestBody final User entity, Principal p) {
-		logger.info("User {}::Request to create a user", p.getName());
+		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
+		User thisUser = ud.getUser();
 		
-		User thisUser = userService.findByUserName(p.getName());
+		logger.info("User {}::Request to create a user", thisUser.getUserName());
+
 		String logData = "created user " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);
@@ -58,9 +62,12 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody User update(@RequestBody final User entity, Principal p) {
-		logger.info("User {}::Request to update a user", p.getName());
+		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
+		User thisUser = ud.getUser();
+		
+		logger.info("User {}::Request to update a user", thisUser.getUserName());
 
-		User thisUser = userService.findByUserName(p.getName());
+		//User thisUser = userService.findByUserName(p.getName());
 		String logData = "modified user " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);		
@@ -77,11 +84,12 @@ public class UserController {
 	@RequestMapping(value = "/{userName}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteUser(@PathVariable("userName") final String userName, Principal p) {
-		logger.info("User {}::Request to delete a user", p.getName());
+		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
+		User thisUser = ud.getUser();
+		logger.info("User {}::Request to delete a user", thisUser.getUserName());
 		
 		User u = userService.findByUserName(userName);	
 
-		User thisUser = userService.findByUserName(p.getName());
 		String logData = "deleted user " + u.getUserName() + " " + u.getFirstName() + " " + u.getLastName() + " " + u.getEmailAddress();
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);		

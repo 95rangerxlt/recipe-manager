@@ -19,11 +19,15 @@ public class RecipeUserDetails implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	
 	private User user;
-	
+		
 	public RecipeUserDetails(final User user){
 		this.user = user;
 	}
 
+	public User getUser() {
+		return this.user;
+	}
+	
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		Set<GrantedAuthority> authorities = new HashSet<GrantedAuthority>();
 		for (Role role : user.getRoles()) {

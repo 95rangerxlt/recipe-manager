@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.internal.recipes.domain.EventLog;
 import com.internal.recipes.domain.Recipe;
 import com.internal.recipes.domain.User;
+import com.internal.recipes.security.RecipeUserDetails;
 import com.internal.recipes.service.EventLogService;
 import com.internal.recipes.service.RecipeDoesNotExistException;
 import com.internal.recipes.service.RecipeService;
@@ -55,9 +57,11 @@ public class RecipeController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public @ResponseBody Recipe create(@RequestBody final Recipe entity, Principal p) {
+		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
+		User thisUser = ud.getUser();
+
 		logger.info("Request to create a recipe");
 
-		User thisUser = userService.findByUserName(p.getName());
 		String logData = "created recipe " + entity.getTitle();
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);
@@ -68,9 +72,11 @@ public class RecipeController {
 	@RequestMapping(method = RequestMethod.PUT)
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody Recipe update(@RequestBody final Recipe entity, Principal p) throws RecipeDoesNotExistException{
+		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
+		User thisUser = ud.getUser();
+
 		logger.info("Request to update a recipe");
 
-		User thisUser = userService.findByUserName(p.getName());
 		String logData = "modified recipe " + entity.getTitle();
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);
@@ -81,11 +87,13 @@ public class RecipeController {
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
 	public void deleteRecipe(@PathVariable("id") final String id, Principal p) throws RecipeDoesNotExistException{
+		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
+		User thisUser = ud.getUser();
+
 		logger.info("Request to delete a recipe");
 		
 		Recipe recipe = recipeService.get(id);
 
-		User thisUser = userService.findByUserName(p.getName());
 		String logData = "deleted recipe " + recipe.getTitle();
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);
