@@ -92,7 +92,9 @@ public class UserController {
 		
 		String encrypted = new StandardPasswordEncoder().encode(entity.getPassword()); 
 		entity.setPassword(encrypted);
-		return userService.updateUser(entity);
+		userService.updateUser(entity);
+		entity.setPassword("");
+		return entity;
 	}
 	
 	@RequestMapping(value = "/{userName}", method = RequestMethod.GET)
@@ -104,8 +106,9 @@ public class UserController {
 	@RequestMapping(value = "/currentUser", method = RequestMethod.GET)
 	public @ResponseBody User getCurrentUser(Principal p) {
 		logger.info("User {}::Request to get a current user", p.getName());
-		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
-		return userService.findByUserName(p.getName());
+		User user = userService.findByUserName(p.getName());
+		user.setPassword("");
+		return user;
 	}
 
 	
