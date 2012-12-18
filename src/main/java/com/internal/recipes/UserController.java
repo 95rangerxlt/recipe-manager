@@ -67,11 +67,12 @@ public class UserController {
 		
 		logger.info("User {}::Request to update a user", thisUser.getUserName());
 
-		//User thisUser = userService.findByUserName(p.getName());
 		String logData = "modified user " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);		
 		
+		User u = userService.findByUserName(entity.getUserName());
+		entity.setPassword(u.getPassword());
 		return userService.updateUser(entity);
 	}
 	

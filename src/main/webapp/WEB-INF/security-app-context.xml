@@ -14,7 +14,7 @@
  
     <http use-expressions="true">
 	    <intercept-url pattern="/index.jsp" access="permitAll" />
- 		<intercept-url pattern="/**" access="hasRole('ROLE_ADMINISTRATOR')" />
+ 		<intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMINISTRATOR', 'ROLE_USER', 'ROLE_GUEST')" />
         <form-login 
         	authentication-success-handler-ref="authSucc"
         	authentication-failure-handler-ref="authFail"

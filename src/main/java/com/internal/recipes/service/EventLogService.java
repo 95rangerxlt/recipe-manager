@@ -23,7 +23,7 @@ public class EventLogService {
 	}
 
 	public List<EventLog> getAllRecentEventLogs() {
-		Pageable p = new PageRequest(0,200, new Sort(Direction.DESC, "logDate"));
+		Pageable p = new PageRequest(0,100, new Sort(Direction.DESC, "logDate"));
 		return eventLogRepository.findAll(p).getContent();
 	}
 

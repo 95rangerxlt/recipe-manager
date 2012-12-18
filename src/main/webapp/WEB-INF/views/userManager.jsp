@@ -43,8 +43,8 @@
     <tr style="height:10px;"><td colspan="3"></td></tr>
     <tr>
       <td><b>User Name:</b></td>
-      <td><b>Password:</b></td>
-      <td><b>Password Confirm:</b></td>
+      <td id="passwordLabel"><b>Password:</b></td>
+      <td id="passwordConfirmLabel"><b>Password Confirm:</b></td>
       <td></td>
     </tr>
     <tr>
@@ -175,13 +175,20 @@ function showUserForm(userId, userName, type) {
 		$("#firstName").val("");
 		$("#lastName").val("");
 		$("#emailAddress").val("");
-		$("#password").val("");
-		$("#passwordConfirm").val("");
+		$("#passwordLabel").show();
+		$("#passwordConfirmLabel").show();
+		$("#password").val("").show();
+		$("#passwordConfirm").val("").show();
+		
 		$("#userName").val("");
 		$("#userForm").dialog("option", "title", "Add a New User");  
 	 }
 	 else {            // show the edit form
 	 	$("#userForm").dialog("option", "title", "Modify User");
+		$("#passwordLabel").hide();
+		$("#passwordConfirmLabel").hide();
+		$("#password").val("").hide();
+		$("#passwordConfirm").val("").hide();
 	
 		$.ajax({
 	        type: 'GET',
@@ -357,7 +364,7 @@ function processDeleteUserSubmitResults(data, userId) {
 	$('#userDeleteForm').dialog('close');
 
 	// remove this user from the table
-	var searchId = userId + "_userId";
+	var searchId = userId + "_id";
 	var allTrs = usersTable.fnGetNodes();
 	for (var i=0; i<allTrs.length ; i++ ) {
 	  if (allTrs[i].cells[0].id == searchId) {

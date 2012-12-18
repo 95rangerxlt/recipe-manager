@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.internal.recipes.domain.User;
@@ -19,6 +20,8 @@ public class UserServiceImpl implements UserService {
 		if (userRepository.findByUserName(user.getUserName()) != null) {
 			throw new UserNameNotUniqueException(user.getUserName());
 		}
+		String encoded = new StandardPasswordEncoder().encode(user.getPassword()); 
+		user.setPassword(encoded);
 		return userRepository.save(user);
 	}
 
