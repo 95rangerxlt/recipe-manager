@@ -18,7 +18,7 @@ import com.internal.recipes.service.EventLogService;
 @RequestMapping(value = "/eventLogs")
 public class EventLogController {
 	@Autowired
-	EventLogService eventLogService;
+	private EventLogService eventLogService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	

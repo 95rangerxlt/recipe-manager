@@ -244,6 +244,7 @@ function processSubmit() {
 	    	   alert("post data: " + JSON.stringify(user));
 	    	   alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
 	    	   alert("responseText: "+xhr.responseText);
+	    	   $('#userForm').dialog('close');
 	    	}
 	       
 	});			    
@@ -345,7 +346,10 @@ function processDeleteUserSubmit() {
         contentType: "application/json",
         dataType: "json",
         success: function(data) {processDeleteUserSubmitResults(data, userId);},
-        error : function(request, status, error) {alert("Failed: " + error);}
+        error : function(request, status, error) {
+        	alert("Failed: " + error);
+        	$('#userDeleteForm').dialog('close');
+        }
 	});			
 }
 
