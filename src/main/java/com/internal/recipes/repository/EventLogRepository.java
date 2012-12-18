@@ -2,6 +2,8 @@ package com.internal.recipes.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 import org.springframework.data.repository.RepositoryDefinition;
 
 import com.internal.recipes.domain.EventLog;
@@ -13,7 +15,9 @@ public interface EventLogRepository {
 	EventLog findOne(String eventId);
 
 	List<EventLog> findAll();
-
+	
+	Page<EventLog> findAll(Pageable p);	
+	
 	Long count();
 
 	void delete(EventLog e);

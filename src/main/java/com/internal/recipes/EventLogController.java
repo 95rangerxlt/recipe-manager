@@ -25,7 +25,7 @@ public class EventLogController {
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody List<EventLog> getAllEventLogs(Principal p) {
 		logger.info("User {}::Request to get all eventLogs.", p.getName());
-		return eventLogService.getAllEventLogs();
+		return eventLogService.getAllRecentEventLogs();
 	}
 
 }
