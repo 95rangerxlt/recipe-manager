@@ -4,6 +4,7 @@
 	<div style="float:left;margin:10px;"><button id="logoutButton">Logout</button></div>  
 	<div style="float:left;margin:10px;"><button id="recipesButton">Recipes</button></div>  
 	<div style="float:left;margin:10px;"><button id="usersButton">Users</button></div>  
+	<div style="float:left;margin:10px;"><button id="myAccountButton">My Account</button></div> 	
 
 	<table border="0" class="display" id="eventLogsTable" >
 	  <caption class="fg-toolbar ui-widget-header"><h2 style="margin:5px;">Recent Activity</h2></caption>
@@ -29,6 +30,8 @@ $(document).ready(function () {
 	$("#recipesButton").click(function() { location.href = 'recipeManager'; });
 	$("#usersButton").button();
 	$("#usersButton").click(function() { location.href = 'userManager'; });
+    $("#myAccountButton").button();
+    $("#myAccountButton").click(function() { location.href = 'myAccountManager'; });
 
 	eventLogsTable = $('#eventLogsTable').dataTable({
 	    "bJQueryUI": true,

@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,8 +72,26 @@ public class UserController {
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);		
 		
+		// don't blow away the stored password
 		User u = userService.findByUserName(entity.getUserName());
 		entity.setPassword(u.getPassword());
+		return userService.updateUser(entity);
+	}
+	
+	@RequestMapping(value = "/myAccount", method = RequestMethod.PUT)
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody User updateMyAccount(@RequestBody final User entity, Principal p) {
+		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
+		User thisUser = ud.getUser();
+		
+		logger.info("User {}::Request to update myAccount", thisUser.getUserName());
+
+		String logData = "modified user myAccount " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		eventLogService.create(el);		
+		
+		String encrypted = new StandardPasswordEncoder().encode(entity.getPassword()); 
+		entity.setPassword(encrypted);
 		return userService.updateUser(entity);
 	}
 	
@@ -81,6 +100,14 @@ public class UserController {
 		logger.info("User {}::Request to get a user with userName: {}", p.getName(), userName);
 		return userService.findByUserName(userName);
 	}
+	
+	@RequestMapping(value = "/currentUser", method = RequestMethod.GET)
+	public @ResponseBody User getCurrentUser(Principal p) {
+		logger.info("User {}::Request to get a current user", p.getName());
+		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
+		return userService.findByUserName(p.getName());
+	}
+
 	
 	@RequestMapping(value = "/{userName}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)

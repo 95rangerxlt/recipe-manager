@@ -4,6 +4,7 @@
 	<div style="float:left;margin:10px;"><button id="logoutButton">Logout</button></div>  
 	<div style="float:left;margin:10px;"><button id="eventLogButton">Event Log</button></div>  
 	<div style="float:left;margin:10px;"><button id="recipesButton">Recipes</button></div>  
+ 	<div style="float:left;margin:10px;"><button id="myAccountButton">My Account</button></div> 	
     <div style="float:right;margin:10px;"><button id="addUserButton">Add User</button></div>  
 
 	<table border="0" class="display" id="usersTable" >
@@ -79,6 +80,8 @@ $(document).ready(function () {
   $("#eventLogButton").click(function() { location.href = 'eventLogManager'; });
   $("#recipesButton").button();
   $("#recipesButton").click(function() { location.href = 'recipeManager'; });
+  $("#myAccountButton").button();
+  $("#myAccountButton").click(function() { location.href = 'myAccountManager'; });
   $("#addUserButton").button();
   $("#addUserButton").click(function() { showUserForm("", "", "POST"); return false; });
   userFormInit();

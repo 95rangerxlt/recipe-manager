@@ -25,6 +25,7 @@ public class UserServiceImpl implements UserService {
 		return userRepository.save(user);
 	}
 
+
 	public User findByUserName(String userName) {
 		User user = userRepository.findByUserName(userName);
 		if (user == null) {
@@ -53,5 +54,4 @@ public class UserServiceImpl implements UserService {
 	public List<User> getAllUsers() {
 		return userRepository.findAll();
 	}
-
 }

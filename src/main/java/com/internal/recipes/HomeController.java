@@ -58,4 +58,9 @@ public class HomeController {
 		return "eventLogManager";
 	}
 	
+	@RequestMapping(value = "myAccountManager", method = RequestMethod.GET)
+	public String myAccount(Locale locale, Model model) {
+		logger.info("Request for the myAccountManager");		
+		return "myAccountManager";
+	}
 }

@@ -4,6 +4,7 @@
 	<div style="float:left;margin:10px;"><button id="logoutButton">Logout</button></div>  
 	<div style="float:left;margin:10px;"><button id="eventLogButton">Event Log</button></div>  
 	<div style="float:left;margin:10px;"><button id="usersButton">Users</button></div>  
+	<div style="float:left;margin:10px;"><button id="myAccountButton">My Account</button></div> 	
     <div style="float:right;margin:10px;"><button id="addRecipeButton">Add Recipe</button></div>  
 
 	<table border="0" class="display" id="recipesTable" >
@@ -68,6 +69,8 @@ $(document).ready(function () {
   $("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });
   $("#usersButton").button();
   $("#usersButton").click(function() { location.href = 'userManager'; });
+  $("#myAccountButton").button();
+  $("#myAccountButton").click(function() { location.href = 'myAccountManager'; });
   recipeFormInit();
 
 	recipesTable = $('#recipesTable').dataTable({
