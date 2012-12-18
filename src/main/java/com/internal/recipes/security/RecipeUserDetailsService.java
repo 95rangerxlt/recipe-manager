@@ -15,6 +15,8 @@ public class RecipeUserDetailsService implements UserDetailsService {
 	UserRepository userRepository;
 
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
+		if (userName == null || userName.equals(""))
+			throw new UsernameNotFoundException("username field not supplied");
 		return new RecipeUserDetails(userRepository.findByUserName(userName));
 	}
 
