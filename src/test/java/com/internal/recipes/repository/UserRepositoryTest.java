@@ -52,7 +52,11 @@ public class UserRepositoryTest {
 		user.setFirstName("Michael");
 		user.getRoles().add(Role.ROLE_ADMINISTRATOR);		
 		userRepository.save(user);
-		
+
+		user = new User("cherb", new StandardPasswordEncoder().encode("ravens"));
+		user.setFirstName("Michael");
+		user.getRoles().add(Role.ROLE_ADMINISTRATOR);		
+		userRepository.save(user);		
 	}
 
 }
