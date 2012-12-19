@@ -208,13 +208,21 @@ function validate() {
 	    $("#userFormErrors").append("<div class=\"error\">Please enter the user's <b>User Name</b>.</div>");
 	    returnVal = false;
 	  }
-
 	  // userName must be at least 5 chars
 	  if ($("#userName").val() && $("#userName").val().length < 5) {
 	    $("#userFormErrors").append("<div class=\"error\">Minimum of 5 characters required for the user's <b>User Name</b>.</div>");
 	    returnVal = false;
 	  }
-	  
+	  var roles = [];
+	  $('input[id^="userRole_"]:checked').each(function (index, value) {
+		  var idArray = value.id.split("userRole_");
+          roles.push(idArray[1]);
+	  });
+	  if (roles.length == 0) {
+		  $("#userFormErrors").append("<div class=\"error\">At least one <b>User Access</b> role must be checked</div>");
+		  returnVal = false;		  
+	  }
+
 	  return returnVal;
 }
 function processGetUserResults(user){
