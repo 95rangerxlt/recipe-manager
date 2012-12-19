@@ -11,16 +11,23 @@
     <http pattern="/css/**" security="none" /> 
     <http pattern="/images/**" security="none" /> 
     <http pattern="/frameworks/**" security="none" /> 
- 
-    <http use-expressions="true">
+    
+
+  	 
+    <http auto-config="true" use-expressions="true">
 	    <intercept-url pattern="/index.jsp" access="permitAll" />
  		<intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMINISTRATOR', 'ROLE_USER', 'ROLE_GUEST')" />
         <form-login 
         	authentication-success-handler-ref="authSucc"
         	authentication-failure-handler-ref="authFail"
-        	/>
-    	<logout success-handler-ref="authLogoutSucc" />
+        	authentication-failure-url="/spring_security_login?login_error"
+        />
+    	<logout invalidate-session="true" success-handler-ref="authLogoutSucc" />
+
+	<session-management invalid-session-url="/spring_security_login" />
+
     </http>
+ 
     
     <authentication-manager>
        <authentication-provider user-service-ref="recipeUserDetailsService" >

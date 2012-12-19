@@ -21,6 +21,7 @@ public class AuthenticationFailureHandler extends ExceptionMappingAuthentication
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
 		EventLog el = new EventLog("Administrator - auto generated", "Login Failure, reason: " + exception.getMessage());
 		eventLogService.create(el);		
+		this.setDefaultFailureUrl("/spring_security_login?login_error");
 		super.onAuthenticationFailure(request, response, exception);					
 	}
 }
