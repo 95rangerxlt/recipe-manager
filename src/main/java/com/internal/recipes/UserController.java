@@ -42,7 +42,11 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody List<User> getAllUsers(Principal p) {
 		logger.info("User {}::Request to get all users.", p.getName());
-		return userService.getAllUsers();
+		List<User> userList = userService.getAllUsers();
+		for (User user : userList) {
+			user.setPassword("");
+		}		
+		return userList;
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -72,9 +76,10 @@ public class UserController {
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);		
 		
-		// don't blow away the stored password
+		// don't blow away the stored password, don't return password to the client
 		User u = userService.findByUserName(entity.getUserName());
 		entity.setPassword(u.getPassword());
+		entity.setPassword("");
 		return userService.updateUser(entity);
 	}
 	
@@ -100,7 +105,9 @@ public class UserController {
 	@RequestMapping(value = "/{userName}", method = RequestMethod.GET)
 	public @ResponseBody User getUser(@PathVariable("userName") final String userName, Principal p) {
 		logger.info("User {}::Request to get a user with userName: {}", p.getName(), userName);
-		return userService.findByUserName(userName);
+		User user = userService.findByUserName(p.getName());
+		user.setPassword("");
+		return user;
 	}
 	
 	@RequestMapping(value = "/currentUser", method = RequestMethod.GET)
