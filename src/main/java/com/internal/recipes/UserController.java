@@ -105,7 +105,7 @@ public class UserController {
 	@RequestMapping(value = "/{userName}", method = RequestMethod.GET)
 	public @ResponseBody User getUser(@PathVariable("userName") final String userName, Principal p) {
 		logger.info("User {}::Request to get a user with userName: {}", p.getName(), userName);
-		User user = userService.findByUserName(p.getName());
+		User user = userService.findByUserName(userName);
 		user.setPassword("");
 		return user;
 	}
