@@ -20,8 +20,6 @@ public class UserServiceImpl implements UserService {
 		if (userRepository.findByUserName(user.getUserName()) != null) {
 			throw new UserNameNotUniqueException(user.getUserName());
 		}
-		String encoded = new StandardPasswordEncoder().encode(user.getPassword()); 
-		user.setPassword(encoded);
 		return userRepository.save(user);
 	}
 

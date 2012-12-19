@@ -42,6 +42,7 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody List<User> getAllUsers(Principal p) {
 		logger.info("User {}::Request to get all users.", p.getName());
+		
 		List<User> userList = userService.getAllUsers();
 		for (User user : userList) {
 			user.setPassword("");
@@ -55,13 +56,18 @@ public class UserController {
 		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
 		User thisUser = ud.getUser();
 		
-		logger.info("User {}::Request to create a user", thisUser.getUserName());
+		logger.info("User {}::Request to create a user", p.getName());
 
 		String logData = "created user " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
 		eventLogService.create(el);
+
+		String encoded = new StandardPasswordEncoder().encode(entity.getPassword()); 
+		entity.setPassword(encoded);
 		
-		return userService.createUser(entity);
+		User u = userService.createUser(entity);
+		u.setPassword("");
+		return u;
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
@@ -79,8 +85,9 @@ public class UserController {
 		// don't blow away the stored password, don't return password to the client
 		User u = userService.findByUserName(entity.getUserName());
 		entity.setPassword(u.getPassword());
-		entity.setPassword("");
-		return userService.updateUser(entity);
+		u = userService.updateUser(entity);
+		u.setPassword("");
+		return u;
 	}
 	
 	@RequestMapping(value = "/myAccount", method = RequestMethod.PUT)
