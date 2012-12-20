@@ -11,6 +11,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 
 import com.internal.recipes.domain.EventLog;
+import com.internal.recipes.domain.EventType;
 import com.internal.recipes.service.EventLogService;
 
 public class AuthenticationFailureHandler extends ExceptionMappingAuthenticationFailureHandler {
@@ -19,7 +20,7 @@ public class AuthenticationFailureHandler extends ExceptionMappingAuthentication
 	
 	@Override
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-		EventLog el = new EventLog("Administrator - auto generated", "Login Failure, reason: " + exception.getMessage());
+		EventLog el = new EventLog("Administrator - auto generated", EventType.EVENT_SECURITY, "Login Failure, reason: " + exception.getMessage());
 		eventLogService.create(el);		
 		this.setDefaultFailureUrl("/spring_security_login?login_error");
 		super.onAuthenticationFailure(request, response, exception);					

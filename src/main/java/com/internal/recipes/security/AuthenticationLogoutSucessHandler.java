@@ -12,6 +12,7 @@ import org.springframework.security.web.authentication.AbstractAuthenticationTar
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.internal.recipes.domain.EventLog;
+import com.internal.recipes.domain.EventType;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.service.EventLogService;
 import com.internal.recipes.service.UserService;
@@ -24,9 +25,11 @@ public class AuthenticationLogoutSucessHandler extends AbstractAuthenticationTar
 	private UserService userService;
 
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		User thisUser = userService.findByUserName(authentication.getName());
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), "logged out as " + thisUser.getUserName());
-		eventLogService.create(el);		
+		if (userService != null && authentication != null) {
+			User thisUser = userService.findByUserName(authentication.getName());
+			EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_SECURITY, "logged out as " + thisUser.getUserName());
+			eventLogService.create(el);		
+		}
 		super.handle(request, response, authentication);
 	}
 }

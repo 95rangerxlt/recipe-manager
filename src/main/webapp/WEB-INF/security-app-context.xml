@@ -22,7 +22,10 @@
         	authentication-failure-handler-ref="authFail"
         	authentication-failure-url="/spring_security_login?login_error"
         />
+ 
+ 	<!-- 
     	<logout invalidate-session="true" success-handler-ref="authLogoutSucc" />
+    -->
 
 	<session-management invalid-session-url="/spring_security_login" />
 
@@ -38,8 +41,12 @@
 	
 <beans:bean class="com.internal.recipes.security.AuthenticationSuccessHandler" name="authSucc"></beans:bean>
 <beans:bean class="com.internal.recipes.security.AuthenticationFailureHandler" name="authFail"></beans:bean>
-<beans:bean class="com.internal.recipes.security.AuthenticationLogoutSucessHandler" name="authLogoutSucc"></beans:bean>   
 <beans:bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" name="passEncoder" ></beans:bean>
+
+<!--
+	<beans:bean class="com.internal.recipes.security.AuthenticationLogoutSucessHandler" name="authLogoutSucc"></beans:bean>   
+-->
+
 
 </beans:beans>
 

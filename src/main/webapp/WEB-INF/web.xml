@@ -27,6 +27,11 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	<listener>
+		<listener-class>com.internal.recipes.security.RecipeManagerSessionListener</listener-class>
+	</listener>
+	
 
  	<session-config>
   		<session-timeout>15</session-timeout>
