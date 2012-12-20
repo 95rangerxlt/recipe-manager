@@ -24,9 +24,11 @@ public class AuthenticationLogoutSucessHandler extends AbstractAuthenticationTar
 	private UserService userService;
 
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		User thisUser = userService.findByUserName(authentication.getName());
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), "logged out as " + thisUser.getUserName());
-		eventLogService.create(el);		
+		if (userService != null && authentication != null) {
+			User thisUser = userService.findByUserName(authentication.getName());
+			EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), "logged out as " + thisUser.getUserName());
+			eventLogService.create(el);		
+		}
 		super.handle(request, response, authentication);
 	}
 }

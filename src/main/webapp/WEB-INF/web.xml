@@ -27,9 +27,14 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	<listener>
+		<listener-class>com.internal.recipes.security.RecipeManagerSessionListener</listener-class>
+	</listener>
+	
 
  	<session-config>
-  		<session-timeout>15</session-timeout>
+  		<session-timeout>1</session-timeout>
 	</session-config>
 
 	<!-- Processes application requests -->
@@ -40,7 +45,7 @@
 			<param-name>contextConfigLocation</param-name>
 			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
 		</init-param>
-		<load-on-startup>1</load-on-startup>
+		<load-on-startup>15</load-on-startup>
 	</servlet>
 		
 	<servlet-mapping>

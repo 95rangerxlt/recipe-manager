@@ -37,9 +37,6 @@ public class RecipeController {
 	@Autowired
 	private EventLogService eventLogService;
 	
-	@Autowired
-	private UserService userService;
-
 	private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
 	@RequestMapping(method = RequestMethod.GET)
