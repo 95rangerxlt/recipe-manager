@@ -53,6 +53,7 @@ public class UserRepositoryTest {
 		user.getRoles().add(Role.ROLE_ADMINISTRATOR);		
 		userRepository.save(user);
 
+		//testing git push with a commen
 		user = new User("cherb", new StandardPasswordEncoder().encode("ravens"));
 		user.setFirstName("Chris");
 		user.getRoles().add(Role.ROLE_ADMINISTRATOR);		
