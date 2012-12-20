@@ -14,6 +14,7 @@
 	    <tr>
 	      <th>Person</th>
 	      <th>When</th>
+	      <th>Log Type</th>
 	      <th>Log Data</th>
 	    </tr>
 	  </thead>

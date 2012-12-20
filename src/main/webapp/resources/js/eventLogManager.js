@@ -28,5 +28,6 @@ function processEventLogList(eventLogs) {
 function addEventLogRow(eventLog) {
     var newRow = eventLogsTable.dataTable().fnAddData([eventLog.person,
                                                    	   new Date(eventLog.logDate),
+                                                   	   eventLog.logType,
                                                    	   eventLog.logData]); 
 }

@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import com.internal.recipes.domain.EventLog;
+import com.internal.recipes.domain.EventType;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.repository.UserRepository;
 import com.internal.recipes.service.EventLogService;
@@ -24,7 +25,7 @@ public class RecipeUserDetailsService implements UserDetailsService {
 		User user = userRepository.findByUserName(userName);
 		if (user == null) {
 			String msg = "No user with username '" + userName + "' found!";
-			EventLog el = new EventLog("Administrator - auto generated", "Login Failure, reason: " + msg);
+			EventLog el = new EventLog("Administrator - auto generated", EventType.EVENT_SECURITY, "Login Failure, reason: " + msg);
 			eventLogService.create(el);		
             throw new UsernameNotFoundException(msg);
 		}

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.internal.recipes.domain.EventLog;
+import com.internal.recipes.domain.EventType;
 import com.internal.recipes.domain.Recipe;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.security.RecipeUserDetails;
@@ -60,7 +61,7 @@ public class RecipeController {
 		logger.info("Request to create a recipe");
 
 		String logData = "created recipe " + entity.getTitle();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_RECIPE_ADMINISTRATION, logData);
 		eventLogService.create(el);
 		
 		return recipeService.create(entity);
@@ -75,7 +76,7 @@ public class RecipeController {
 		logger.info("Request to update a recipe");
 
 		String logData = "modified recipe " + entity.getTitle();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_RECIPE_ADMINISTRATION, logData);
 		eventLogService.create(el);
 
 		return recipeService.update(entity);
@@ -92,7 +93,7 @@ public class RecipeController {
 		Recipe recipe = recipeService.get(id);
 
 		String logData = "deleted recipe " + recipe.getTitle();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), logData);
+		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_RECIPE_ADMINISTRATION, logData);
 		eventLogService.create(el);
 
 		recipeService.delete(recipe);
