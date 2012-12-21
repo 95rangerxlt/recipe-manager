@@ -43,13 +43,21 @@ public class RecipeController {
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody List<Recipe> getAllRecipes() {
 		logger.info("Request to get all recipes.");
-		return recipeService.getAllRecipes();
+		
+		List<Recipe> recipes = recipeService.getAllRecipes();
+		for (Recipe recipe : recipes) {
+			recipe.getContributer().setPassword("");
+		}
+		return recipes;
 	}
 	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public @ResponseBody Recipe getRecipe(@PathVariable("id") final String id) throws RecipeDoesNotExistException {
 		logger.info("Request to get one recipe with id: {}", id);
-		return recipeService.get(id);
+		
+		Recipe recipe = recipeService.get(id);
+		recipe.getContributer().setPassword("");
+		return recipe;
 	}
 
 	@RequestMapping(method = RequestMethod.POST)
@@ -57,6 +65,7 @@ public class RecipeController {
 	public @ResponseBody Recipe create(@RequestBody final Recipe entity, Principal p) {
 		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
 		User thisUser = ud.getUser();
+		entity.setContributer(thisUser);
 
 		logger.info("Request to create a recipe");
 
@@ -64,7 +73,10 @@ public class RecipeController {
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_RECIPE_ADMINISTRATION, logData);
 		eventLogService.create(el);
 		
-		return recipeService.create(entity);
+		Recipe recipe = recipeService.create(entity);
+		recipe.getContributer().setPassword("");
+		
+		return recipe;
 	}
 
 	@RequestMapping(method = RequestMethod.PUT)
@@ -79,12 +91,17 @@ public class RecipeController {
 		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_RECIPE_ADMINISTRATION, logData);
 		eventLogService.create(el);
 
-		return recipeService.update(entity);
+		if (entity.getContributer().getId() == "")
+			entity.setContributer(thisUser);
+			
+		Recipe recipe = recipeService.update(entity);
+		recipe.getContributer().setPassword("");
+		return recipe;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)
-	public void deleteRecipe(@PathVariable("id") final String id, Principal p) throws RecipeDoesNotExistException{
+	public @ResponseBody Recipe deleteRecipe(@PathVariable("id") final String id, Principal p) throws RecipeDoesNotExistException{
 		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
 		User thisUser = ud.getUser();
 
@@ -97,6 +114,9 @@ public class RecipeController {
 		eventLogService.create(el);
 
 		recipeService.delete(recipe);
+		
+		recipe.getContributer().setPassword("");
+		return recipe;
 	}
 	
     @ExceptionHandler({RecipeDoesNotExistException.class})

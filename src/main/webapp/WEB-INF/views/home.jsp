@@ -13,11 +13,11 @@
 	  <caption class="fg-toolbar ui-widget-header"><h2 style="margin:5px;">Recipes</h2></caption>
 	  <thead>
 	    <tr>
-	      <th>ID</th>
-	      <th>Title</th>
+	      <th width="10%">Contributer</th>
+	      <th width="15%">Title</th>
 	      <th>Description</th>
-	      <th>URL</th>
-	      <th>Notes</th>
+	      <th width="20%">URL</th>
+	      <th width="15%">Notes</th>
 	      <th width="5%">Action</th>
 	    </tr>
 	  </thead>
@@ -33,6 +33,7 @@
 
 <div class="demo_jui" style="margin:20px;" >
 <div id="recipeForm" title="" style="display:none;margin-top:5px;">
+  <input type="text" style="display:none" value="" id="recipeContributerId" />
   <div id="recipeFormErrors" style="display:none;margin:0px;"><div class="error"></div></div>
   <table width="100%" class="display" cellspacing="0" cellpadding="0"><tbody>
     <tr><td><b>Title</b></td><td><b>URL</b></td></tr>

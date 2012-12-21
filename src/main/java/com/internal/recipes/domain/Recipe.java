@@ -1,13 +1,18 @@
 package com.internal.recipes.domain;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 @Document
 public class Recipe {
 
 	@Id
 	private String recipeId;
+	
+	@DBRef
+	private User contributer;
 	
 	private String title;
 	private String description;
@@ -31,6 +36,9 @@ public class Recipe {
 	public void setRecipeId(final String recipeId) {
 		this.recipeId = recipeId;
 	}
+	public void setContributer(User c) {
+		this.contributer = c;
+	}
 
 	public String getTitle() {
 		return title;
@@ -48,6 +56,10 @@ public class Recipe {
 		this.description = description;
 	}
 
+	public User getContributer() {
+		return this.contributer;
+	}
+	
 	public String getUrl() {
 		return url;
 	}

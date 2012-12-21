@@ -33,23 +33,24 @@ function processRecipeList(data) {
 }
 
 function addRecipeRow(recipe) {
+	var clink = recipe.contributer != null ? '<address><a href="mailto:' + recipe.contributer.emailAddress + '?Subject=' + recipe.title + '">' + recipe.contributer.firstName + " " + recipe.contributer.lastName + '</a></address>' : "";
     var mlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeForm(' + "'" + recipe.recipeId +  "'" + ');">Modify</a></div>';
     var dlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeDeleteForm(' + "'" + recipe.recipeId + "'" + ');">Delete</a></div>';
-    var newRow = recipesTable.dataTable().fnAddData([recipe.recipeId,
+    var newRow = recipesTable.dataTable().fnAddData([clink,
                                                      recipe.title,
                                                      recipe.description,
                                                      '<a target="_blank" href="' + recipe.url + '">' + recipe.url + '</a>',
                                                      recipe.notes,
                                                      mlink + dlink]); 
-
+    
     // update the dom for this new tr so we have the ids set correctly
     var newTr = recipesTable.fnSettings().aoData[ newRow[0] ].nTr;
     var idp = recipe.recipeId + "_";
-    newTr.cells[0].id = idp + "recipeId";
+    newTr.cells[0].id = idp + "contributer";
     newTr.cells[1].id = idp + "title";
     newTr.cells[2].id = idp + "description";
     newTr.cells[3].id = idp + "url";
-    newTr.cells[4].id = idp + "notes";		
+    newTr.cells[4].id = idp + "notes";	
 }
 
 function recipeFormInit() {
@@ -130,6 +131,8 @@ function showRecipeDeleteForm(recipeId) {
 
 function processGetRecipeResults(recipe){
 	 $("#recipeId").val(recipe.recipeId);
+	 if (recipe.contributer)
+		 $("#recipeContributerId").val(recipe.contributer.id);
 	 $("#recipeTitle").val(recipe.title);
 	 $("#recipeUrl").val(recipe.url);
 	 $("#recipeDescription").val(recipe.description);
@@ -144,6 +147,9 @@ function processSubmit() {
 
 	recipe = new Object();
 	recipeId = $("#recipeId").val();
+	var contributer = new Object();
+	contributer.id = $("#recipeContributerId").val();
+	recipe.contributer = contributer;
 	recipe.title =  $("#recipeTitle").val();
 	recipe.url =  $("#recipeUrl").val();
 	recipe.description =  $("#recipeDescription").val();
@@ -167,6 +173,7 @@ function processSubmitResults(recipe, type) {
 	
 	if (type == 'PUT') {
 		var idp = recipe.recipeId + "_";
+		$("#" + idp + "contributer").html(recipe.contributer.firstName + " " + recipe.contributer.lastName);
 		$("#" + idp + "title").html(recipe.title);
 		$("#" + idp + "url").html('<a target="_blank" href="' + recipe.url + '">' + recipe.url + '</a>');
 		$("#" + idp + "description").html(recipe.description);
@@ -184,19 +191,19 @@ function processDeleteRecipeSubmit() {
         url: 'recipes/' + recipeId,
         contentType: "application/json",
         dataType: "json",
-        success: function(data) {processDeleteRecipeSubmitResults(data, recipeId);},
+        success: function(data) {processDeleteRecipeSubmitResults(data);},
         error : function(request, status, error) {alert("Failed: " + error);}
 	});			
 }
 
-function processDeleteRecipeSubmitResults(data, recipeId) {
+function processDeleteRecipeSubmitResults(recipe) {
 	$('#recipeDeleteForm').dialog('close');
 
 	// remove this recipe from the table
-	var searchId = recipeId + "_recipeId";
+	var searchId = recipe.recipeId + "_title";
 	var allTrs = recipesTable.fnGetNodes();
 	for (var i=0; i<allTrs.length ; i++ ) {
-	  if (allTrs[i].cells[0].id == searchId) {
+	  if (allTrs[i].cells[1].id == searchId) {
 	    recipesTable.fnDeleteRow(allTrs[i]);
 	    break;
 	  }
