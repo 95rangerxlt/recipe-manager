@@ -172,8 +172,9 @@ function processSubmitResults(recipe, type) {
 	$('#recipeForm').dialog('close');
 	
 	if (type == 'PUT') {
+		var clink = recipe.contributer != null ? '<address><a href="mailto:' + recipe.contributer.emailAddress + '?Subject=' + recipe.title + '">' + recipe.contributer.firstName + " " + recipe.contributer.lastName + '</a></address>' : "";
 		var idp = recipe.recipeId + "_";
-		$("#" + idp + "contributer").html(recipe.contributer.firstName + " " + recipe.contributer.lastName);
+		$("#" + idp + "contributer").html(clink);
 		$("#" + idp + "title").html(recipe.title);
 		$("#" + idp + "url").html('<a target="_blank" href="' + recipe.url + '">' + recipe.url + '</a>');
 		$("#" + idp + "description").html(recipe.description);

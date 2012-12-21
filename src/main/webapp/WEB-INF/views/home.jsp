@@ -14,10 +14,10 @@
 	  <thead>
 	    <tr>
 	      <th width="10%">Contributer</th>
-	      <th width="15%">Title</th>
+	      <th width="12%">Title</th>
 	      <th>Description</th>
 	      <th width="20%">URL</th>
-	      <th width="15%">Notes</th>
+	      <th width="25%">Notes</th>
 	      <th width="5%">Action</th>
 	    </tr>
 	  </thead>
