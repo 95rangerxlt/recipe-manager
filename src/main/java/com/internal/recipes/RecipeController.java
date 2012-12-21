@@ -46,7 +46,8 @@ public class RecipeController {
 		
 		List<Recipe> recipes = recipeService.getAllRecipes();
 		for (Recipe recipe : recipes) {
-			recipe.getContributer().setPassword("");
+			if (recipe.getContributer() != null)
+				recipe.getContributer().setPassword("");
 		}
 		return recipes;
 	}
@@ -56,7 +57,8 @@ public class RecipeController {
 		logger.info("Request to get one recipe with id: {}", id);
 		
 		Recipe recipe = recipeService.get(id);
-		recipe.getContributer().setPassword("");
+		if (recipe.getContributer() != null)
+			recipe.getContributer().setPassword("");
 		return recipe;
 	}
 
@@ -74,7 +76,8 @@ public class RecipeController {
 		eventLogService.create(el);
 		
 		Recipe recipe = recipeService.create(entity);
-		recipe.getContributer().setPassword("");
+		if (recipe.getContributer() != null)
+			recipe.getContributer().setPassword("");
 		
 		return recipe;
 	}
@@ -95,7 +98,8 @@ public class RecipeController {
 			entity.setContributer(thisUser);
 			
 		Recipe recipe = recipeService.update(entity);
-		recipe.getContributer().setPassword("");
+		if (recipe.getContributer() != null)
+			recipe.getContributer().setPassword("");
 		return recipe;
 	}
 
@@ -115,7 +119,8 @@ public class RecipeController {
 
 		recipeService.delete(recipe);
 		
-		recipe.getContributer().setPassword("");
+		if (recipe.getContributer() != null)
+			recipe.getContributer().setPassword("");
 		return recipe;
 	}
 	
