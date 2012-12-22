@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.internal.recipes.domain.Recipe;
-import com.internal.recipes.service.RecipeDoesNotExistException;
+import com.internal.recipes.exception.RecipeDoesNotExistException;
 import com.internal.recipes.service.RecipeService;
 
 /**

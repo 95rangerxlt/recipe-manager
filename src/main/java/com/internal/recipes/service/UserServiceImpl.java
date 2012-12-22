@@ -11,6 +11,7 @@ import com.internal.recipes.domain.EventLog;
 import com.internal.recipes.domain.EventType;
 import com.internal.recipes.domain.RecipeManagerEvent;
 import com.internal.recipes.domain.User;
+import com.internal.recipes.exception.UserNameNotUniqueException;
 import com.internal.recipes.repository.UserRepository;
 
 @Service

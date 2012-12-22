@@ -1,4 +1,4 @@
-package com.internal.recipes.service;
+package com.internal.recipes.exception;
 
 public final class RecipeDoesNotExistException extends RuntimeException {
     

@@ -20,8 +20,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.internal.recipes.domain.Recipe;
 import com.internal.recipes.domain.User;
+import com.internal.recipes.exception.RecipeDoesNotExistException;
 import com.internal.recipes.security.RecipeUserDetails;
-import com.internal.recipes.service.RecipeDoesNotExistException;
 import com.internal.recipes.service.RecipeService;
 
 @Controller
