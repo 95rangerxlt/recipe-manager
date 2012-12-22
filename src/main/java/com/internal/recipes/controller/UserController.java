@@ -96,7 +96,7 @@ public class UserController {
 	
 	@RequestMapping(value = "/currentUser", method = RequestMethod.GET)
 	public @ResponseBody User getCurrentUser(Principal p) {
-		logger.info("User {}::Request to get a current user ", p.getName());
+		logger.info("User {}::Request to get current user", p.getName());
 		User user = userService.findByUserName(p.getName());
 		user.setPassword("");
 		return user;
@@ -104,9 +104,8 @@ public class UserController {
 
 	@RequestMapping(value = "/userInfo/{userName}", method = RequestMethod.GET)
 	public @ResponseBody User getUserInfo(@PathVariable("userName") final String userName, Principal p) {
-		logger.info("User {}::Request to get user info for user ", p.getName());
+		logger.info("User {}::Request to get user info for user {}", p.getName(), userName);
 		User user = userService.getUserInfo(userName);
-		user.setPassword("");
 		return user;
 	}
 	
