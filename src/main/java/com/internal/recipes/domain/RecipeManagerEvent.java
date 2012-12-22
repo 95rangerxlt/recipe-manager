@@ -1,5 +1,7 @@
 package com.internal.recipes.domain;
 
+import java.util.Date;
+
 import org.springframework.context.ApplicationEvent;
 
 public class RecipeManagerEvent extends ApplicationEvent{
@@ -9,6 +11,8 @@ public class RecipeManagerEvent extends ApplicationEvent{
 
 	public RecipeManagerEvent(Object source, EventLog eventLog) {
 		super(source);
+		Date eventDate = new Date(this.getTimestamp());
+		eventLog.setLogDate(eventDate);
 		this.eventLog = eventLog;
 	}
 

@@ -20,7 +20,6 @@ public class EventLog {
 	}
 
 	public EventLog(EventType logType, String logData) {
-		this.logDate = new Date();
 		this.logType = logType;
 		this.logData = logData;
 	}
