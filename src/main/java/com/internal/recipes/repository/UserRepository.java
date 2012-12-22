@@ -13,6 +13,8 @@ public interface UserRepository {
 
 	User findByUserName(String userName);
 
+	User findOne(String primaryKey);
+
 	List<User> findAll();
 
 	Long count();
