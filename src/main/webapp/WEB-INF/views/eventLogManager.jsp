@@ -12,7 +12,7 @@
 	  <caption class="fg-toolbar ui-widget-header"><h2 style="margin:5px;">Recent Activity</h2></caption>
 	  <thead>
 	    <tr>
-	      <th>Person</th>
+	      <th>Actor</th>
 	      <th>When</th>
 	      <th>Log Type</th>
 	      <th>Log Data</th>

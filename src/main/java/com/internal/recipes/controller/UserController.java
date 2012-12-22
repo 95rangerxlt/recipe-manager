@@ -20,12 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.internal.recipes.domain.EventType;
 import com.internal.recipes.domain.Role;
 import com.internal.recipes.domain.User;
-import com.internal.recipes.domain.EventLog;
 import com.internal.recipes.security.RecipeUserDetails;
-import com.internal.recipes.service.EventLogService;
 import com.internal.recipes.service.UserService;
 
 @Controller
@@ -34,10 +31,7 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
-	
-	@Autowired
-	EventLogService eventLogService;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -54,14 +48,7 @@ public class UserController {
 	@RequestMapping(method = RequestMethod.POST)
 	@ResponseStatus(HttpStatus.CREATED)
 	public @ResponseBody User create(@RequestBody final User entity, Principal p) {
-		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication)p).getPrincipal();
-		User thisUser = ud.getUser();
-		
 		logger.info("User {}::Request to create a user", p.getName());
-
-		String logData = "created user " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_USER_ADMINISTATION, logData);
-		eventLogService.create(el);
 
 		String encoded = new StandardPasswordEncoder().encode(entity.getPassword()); 
 		entity.setPassword(encoded);
@@ -79,10 +66,6 @@ public class UserController {
 		
 		logger.info("User {}::Request to update a user", thisUser.getUserName());
 
-		String logData = "modified user " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_USER_ADMINISTATION, logData);
-		eventLogService.create(el);		
-		
 		// don't blow away the stored password, don't return password to the client
 		User u = userService.findByUserName(entity.getUserName());
 		entity.setPassword(u.getPassword());
@@ -99,10 +82,6 @@ public class UserController {
 		
 		logger.info("User {}::Request to update myAccount", thisUser.getUserName());
 
-		String logData = "modified user myAccount " + entity.getUserName() + " " + entity.getFirstName() + " " + entity.getLastName() + " " + entity.getEmailAddress();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_USER_ADMINISTATION, logData);
-		eventLogService.create(el);		
-		
 		String encrypted = new StandardPasswordEncoder().encode(entity.getPassword()); 
 		entity.setPassword(encrypted);
 		userService.updateUser(entity);
@@ -135,10 +114,6 @@ public class UserController {
 		logger.info("User {}::Request to delete a user", thisUser.getUserName());
 		
 		User u = userService.findByUserName(userName);	
-
-		String logData = "deleted user " + u.getUserName() + " " + u.getFirstName() + " " + u.getLastName() + " " + u.getEmailAddress();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(), EventType.EVENT_USER_ADMINISTATION, logData);
-		eventLogService.create(el);		
 
 		userService.deleteUser(u);
 	}

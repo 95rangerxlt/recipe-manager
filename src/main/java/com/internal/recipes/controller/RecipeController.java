@@ -6,7 +6,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -19,13 +18,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.internal.recipes.domain.EventLog;
-import com.internal.recipes.domain.EventType;
 import com.internal.recipes.domain.Recipe;
-import com.internal.recipes.domain.RecipeManagerEvent;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.security.RecipeUserDetails;
-import com.internal.recipes.service.EventLogService;
 import com.internal.recipes.service.RecipeDoesNotExistException;
 import com.internal.recipes.service.RecipeService;
 
@@ -35,12 +30,6 @@ public class RecipeController {
 
 	@Autowired
 	private RecipeService recipeService;
-
-	@Autowired
-	private EventLogService eventLogService;
-
-	@Autowired
-	private ApplicationEventPublisher publisher;
 
 	private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
@@ -78,11 +67,6 @@ public class RecipeController {
 
 		logger.info("Request to create a recipe");
 
-		String logData = "created recipe " + entity.getTitle();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(),
-				EventType.EVENT_RECIPE_ADMINISTRATION, logData);
-		eventLogService.create(el);
-
 		Recipe recipe = recipeService.create(entity);
 		if (recipe.getContributer() != null)
 			recipe.getContributer().setPassword("");
@@ -99,15 +83,6 @@ public class RecipeController {
 
 		logger.info("Request to update a recipe");
 
-		String logData = "modified recipe " + entity.getTitle();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(),
-				EventType.EVENT_RECIPE_ADMINISTRATION, logData);
-		eventLogService.create(el);
-
-		RecipeManagerEvent rme = new RecipeManagerEvent(EventType.EVENT_RECIPE_ADMINISTRATION);
-
-		publisher.publishEvent(rme);
-
 		if (entity.getContributer().getId() == "")
 			entity.setContributer(thisUser);
 
@@ -121,18 +96,8 @@ public class RecipeController {
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody
 	Recipe deleteRecipe(@PathVariable("id") final String id, Principal p) throws RecipeDoesNotExistException {
-		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication) p).getPrincipal();
-		User thisUser = ud.getUser();
-
 		logger.info("Request to delete a recipe");
-
 		Recipe recipe = recipeService.get(id);
-
-		String logData = "deleted recipe " + recipe.getTitle();
-		EventLog el = new EventLog(thisUser.getFirstName() + " " + thisUser.getLastName(),
-				EventType.EVENT_RECIPE_ADMINISTRATION, logData);
-		eventLogService.create(el);
-
 		recipeService.delete(recipe);
 
 		if (recipe.getContributer() != null)

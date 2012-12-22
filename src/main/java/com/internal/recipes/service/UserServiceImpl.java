@@ -3,10 +3,13 @@ package com.internal.recipes.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.internal.recipes.domain.EventLog;
+import com.internal.recipes.domain.EventType;
+import com.internal.recipes.domain.RecipeManagerEvent;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.repository.UserRepository;
 
@@ -16,10 +19,19 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 	
+	@Autowired
+	private ApplicationEventPublisher publisher;
+	
 	public User createUser(User user) {
 		if (userRepository.findByUserName(user.getUserName()) != null) {
 			throw new UserNameNotUniqueException(user.getUserName());
 		}
+		
+		String logData = "created user " + user.getUserName() + " " + user.getFirstName() + " " + user.getLastName() + " " + user.getEmailAddress();
+		EventLog el = new EventLog(EventType.EVENT_USER_ADMINISTATION, logData);
+		el.setActor(user.getUserName());
+		publisher.publishEvent(new RecipeManagerEvent(this, el));
+		
 		return userRepository.save(user);
 	}
 
@@ -37,6 +49,12 @@ public class UserServiceImpl implements UserService {
 		if (u == null) {
 			throw new UsernameNotFoundException("user: " + user.getUserName() + " does not exist");			
 		}
+		
+		String logData = "modified user " + user.getUserName() + " " + user.getFirstName() + " " + user.getLastName() + " " + user.getEmailAddress();
+		EventLog el = new EventLog(EventType.EVENT_USER_ADMINISTATION, logData);
+		el.setActor(user.getUserName());
+		publisher.publishEvent(new RecipeManagerEvent(this, el));
+		
 		return userRepository.save(user);
 	}
 
@@ -45,6 +63,12 @@ public class UserServiceImpl implements UserService {
 		if (u == null) {
 			throw new UsernameNotFoundException("user: " + user.getUserName() + " does not exist");			
 		}
+		
+		String logData = "deleted user " + u.getUserName() + " " + u.getFirstName() + " " + u.getLastName() + " " + u.getEmailAddress();
+		EventLog el = new EventLog(EventType.EVENT_USER_ADMINISTATION, logData);
+		el.setActor(u.getUserName());
+		publisher.publishEvent(new RecipeManagerEvent(this, el));
+		
 		userRepository.delete(u);
 		return true;
 	}
