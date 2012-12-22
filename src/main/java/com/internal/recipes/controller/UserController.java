@@ -1,4 +1,4 @@
-package com.internal.recipes;
+package com.internal.recipes.controller;
 
 import java.security.Principal;
 import java.util.List;
