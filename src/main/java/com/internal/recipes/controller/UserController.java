@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.internal.recipes.domain.Role;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.security.RecipeUserDetails;
-import com.internal.recipes.service.UserService;
+import com.internal.recipes.service.UserServiceImpl;
 
 @Controller
 @RequestMapping(value = "/users")
 public class UserController {
 
 	@Autowired
-	UserService userService;
+	UserServiceImpl userService;
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
@@ -39,9 +39,6 @@ public class UserController {
 		logger.info("User {}::Request to get all users.", p.getName());
 		
 		List<User> userList = userService.getAllUsers();
-		for (User user : userList) {
-			user.setPassword("");
-		}		
 		return userList;
 	}
 	
@@ -99,12 +96,19 @@ public class UserController {
 	
 	@RequestMapping(value = "/currentUser", method = RequestMethod.GET)
 	public @ResponseBody User getCurrentUser(Principal p) {
-		logger.info("User {}::Request to get a current user", p.getName());
+		logger.info("User {}::Request to get a current user ", p.getName());
 		User user = userService.findByUserName(p.getName());
 		user.setPassword("");
 		return user;
 	}
 
+	@RequestMapping(value = "/userInfo/{userName}", method = RequestMethod.GET)
+	public @ResponseBody User getUserInfo(@PathVariable("userName") final String userName, Principal p) {
+		logger.info("User {}::Request to get user info for user ", p.getName());
+		User user = userService.getUserInfo(userName);
+		user.setPassword("");
+		return user;
+	}
 	
 	@RequestMapping(value = "/{userName}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)

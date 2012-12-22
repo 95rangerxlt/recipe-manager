@@ -20,7 +20,7 @@ public class EventLogController {
 	@Autowired
 	private EventLogService eventLogService;
 	
-	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
+	private static final Logger logger = LoggerFactory.getLogger(EventLogController.class);
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public @ResponseBody List<EventLog> getAllEventLogs(Principal principal) {

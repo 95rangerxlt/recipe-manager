@@ -83,6 +83,10 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public List<User> getAllUsers() {
-		return userRepository.findAll();
+		return userRepository.getAll();
+	}
+	
+	public User getUserInfo(String userName) {
+		return userRepository.getUserInfo(userName);	
 	}
 }
