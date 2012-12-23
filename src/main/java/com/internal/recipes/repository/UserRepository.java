@@ -22,7 +22,8 @@ public interface UserRepository {
 	@Query(value = "{}", fields = "{'password': 0 }")
 	List<User> getAll();
 	
-	@Query(value = "{}", fields = "{'userName': 1, 'firstName':1, 'lastName':1, 'emailAddress':1 }")	
+	
+	@Query(value = "{'userName': ?0}", fields = "{'userName': 1, 'firstName':1, 'lastName':1, 'emailAddress':1 }")	
 	User getUserInfo(String userName);
 
 	Long count();

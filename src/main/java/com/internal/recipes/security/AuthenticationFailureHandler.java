@@ -24,7 +24,7 @@ public class AuthenticationFailureHandler extends ExceptionMappingAuthentication
 		EventLog el = new EventLog(EventType.EVENT_SECURITY, "Login Failure, reason: " + exception.getMessage());
 		el.setActor("Administrator - auto generated");
 		publisher.publishEvent(new RecipeManagerEvent(this, el));
-		this.setDefaultFailureUrl("/spring_security_login?login_error");
+		this.setDefaultFailureUrl("/rmLogin?login_error=" + exception.getMessage());
 		super.onAuthenticationFailure(request, response, exception);					
 	}
 }

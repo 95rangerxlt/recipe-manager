@@ -87,6 +87,7 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	public User getUserInfo(String userName) {
+		System.out.println("UserServiceImpl::getUserInfo for userName:" + userName);
 		return userRepository.getUserInfo(userName);	
 	}
 }
