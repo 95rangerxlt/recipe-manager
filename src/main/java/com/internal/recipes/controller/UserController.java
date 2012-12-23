@@ -23,14 +23,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import com.internal.recipes.domain.Role;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.security.RecipeUserDetails;
-import com.internal.recipes.service.UserServiceImpl;
+import com.internal.recipes.service.UserService;
 
 @Controller
 @RequestMapping(value = "/users")
 public class UserController {
 
 	@Autowired
-	UserServiceImpl userService;
+	UserService userService;
 
 	private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 	
