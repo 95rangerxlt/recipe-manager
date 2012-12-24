@@ -61,7 +61,7 @@ $(document).ready(function() {
 
 	var loginError =  getURLParameter("login_error");
 	if(loginError) {
-		$("#loginError").html("Login Failed, Reason:" + loginError).show();
+		$("#loginError").html("Login Failed, Reason: " + loginError).show();
         $("fieldset#signin_menu").toggle();
         $(".signin").toggleClass("menu-open");
 	}

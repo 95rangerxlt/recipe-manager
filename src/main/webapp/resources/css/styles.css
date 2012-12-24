@@ -117,6 +117,7 @@ button {
 }
 
 .success {
+  font-size:.95em;
   text-align: left;
   background: #97de86;
   color:black;
@@ -126,6 +127,7 @@ button {
 }
 
 .warning {
+  font-size:.95em;
   text-align: left;
   background: #dece86;
   color:black;
