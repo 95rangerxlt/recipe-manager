@@ -29,7 +29,7 @@
 </div>
 
 <div style="text-align:center">
-	<h3 style="font-size:2.0em;">Welcome to HerbCookBook.net</h3>
+	<h3 style="font-size:2.0em;">Welcome to HerbCooking.net</h3>
     <div><img title="M&C LLC" style="height:45px;" src="resources/images/logo.jpg"/></div>
     <div><b style="vertical-align:bottom; margin-left: 3px;">&copy; M&C LLC Copyright 2011 - 2012</b></div>	
 </div>
