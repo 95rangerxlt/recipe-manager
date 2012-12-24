@@ -39,9 +39,6 @@ public class UserController {
 		logger.info("User {}::Request to get all users.", p.getName());
 		
 		List<User> userList = userService.getAllUsers();
-		for (User user : userList) {
-			user.setPassword("");
-		}		
 		return userList;
 	}
 	
@@ -99,12 +96,18 @@ public class UserController {
 	
 	@RequestMapping(value = "/currentUser", method = RequestMethod.GET)
 	public @ResponseBody User getCurrentUser(Principal p) {
-		logger.info("User {}::Request to get a current user", p.getName());
+		logger.info("User {}::Request to get current user", p.getName());
 		User user = userService.findByUserName(p.getName());
 		user.setPassword("");
 		return user;
 	}
 
+	@RequestMapping(value = "/userInfo/{userName}", method = RequestMethod.GET)
+	public @ResponseBody User getUserInfo(@PathVariable("userName") final String userName, Principal p) {
+		logger.info("User {}::Request to get user info for user {}", p.getName(), userName);
+		User user = userService.getUserInfo(userName);
+		return user;
+	}
 	
 	@RequestMapping(value = "/{userName}", method = RequestMethod.DELETE)
 	@ResponseStatus(HttpStatus.OK)

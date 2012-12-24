@@ -23,6 +23,7 @@ import com.internal.recipes.domain.User;
 import com.internal.recipes.exception.RecipeDoesNotExistException;
 import com.internal.recipes.security.RecipeUserDetails;
 import com.internal.recipes.service.RecipeService;
+import com.internal.recipes.service.UserService;
 
 @Controller
 @RequestMapping(value = "/recipes")
@@ -30,6 +31,9 @@ public class RecipeController {
 
 	@Autowired
 	private RecipeService recipeService;
+	
+	@Autowired 
+	private UserService userService;
 
 	private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
@@ -83,8 +87,13 @@ public class RecipeController {
 
 		logger.info("Request to update a recipe");
 
+		User uc;
 		if (entity.getContributer().getId() == "")
-			entity.setContributer(thisUser);
+			uc  = thisUser;
+		else
+			uc = userService.findOne(entity.getContributer().getId());
+		
+		entity.setContributer(uc);
 
 		Recipe recipe = recipeService.update(entity);
 		if (recipe.getContributer() != null)

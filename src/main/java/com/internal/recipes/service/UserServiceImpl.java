@@ -44,6 +44,14 @@ public class UserServiceImpl implements UserService {
 		}
 		return user;
 	}
+	
+	public User findOne(String id) {
+		User user = userRepository.findOne(id);
+		if (user == null) {
+			throw new UsernameNotFoundException ("user: with id " + id + " does not exist");
+		}
+		return user;
+	}
 
 	public User updateUser(User user) {
 		User u = findByUserName(user.getUserName());
@@ -75,6 +83,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	public List<User> getAllUsers() {
-		return userRepository.findAll();
+		return userRepository.getAll();
+	}
+	
+	public User getUserInfo(String userName) {
+		System.out.println("UserServiceImpl::getUserInfo for userName:" + userName);
+		return userRepository.getUserInfo(userName);	
 	}
 }

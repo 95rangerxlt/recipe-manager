@@ -1,5 +1,6 @@
 <%@ include file="/resources/frameworks/topFramework.html" %>
 <script src="resources/js/eventLogManager.js" type="text/javascript"></script>
+<script src="resources/js/userInfoForm.js" type="text/javascript"></script>
 
 <div id="content" style="width:90%;">
     <h2>Event Log Administration</h2>
@@ -24,3 +25,4 @@
 </div>
 
 <%@ include file="/resources/frameworks/bottomFramework.html" %>
+<%@ include file="/resources/frameworks/userInfoForm.html" %>

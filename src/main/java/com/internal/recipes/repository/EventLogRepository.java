@@ -15,7 +15,7 @@ public interface EventLogRepository {
 	EventLog findOne(String eventId);
 
 	List<EventLog> findAll();
-	
+		
 	Page<EventLog> findAll(Pageable p);	
 	
 	Long count();

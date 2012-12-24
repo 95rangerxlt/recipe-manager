@@ -2,6 +2,7 @@ package com.internal.recipes.repository;
 
 import java.util.List;
 
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.repository.RepositoryDefinition;
 
 import com.internal.recipes.domain.User;
@@ -13,12 +14,21 @@ public interface UserRepository {
 
 	User findByUserName(String userName);
 
+	User findOne(String primaryKey);
+
 	List<User> findAll();
+
+	// filter out the password field
+	@Query(value = "{}", fields = "{'password': 0 }")
+	List<User> getAll();
+	
+	
+	@Query(value = "{'userName': ?0}", fields = "{'userName': 1, 'firstName':1, 'lastName':1, 'emailAddress':1 }")	
+	User getUserInfo(String userName);
 
 	Long count();
 
 	void delete(User user);
 
-	boolean exists(String id);
-	
+	boolean exists(String id);	
 }
