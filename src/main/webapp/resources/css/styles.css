@@ -110,24 +110,27 @@ button {
 .error {
   text-align: left;
   background: #DE8688;
+  color:black;
   border: 1px solid #691A13;
-  padding: 4px;
+  padding: 5px;
   margin-bottom: 10px;
 }
 
 .success {
   text-align: left;
   background: #97de86;
-  border: 1px solid #136923;
-  padding: 4px;
+  color:black;
+  order: 1px solid #136923;
+  padding: 5px;
   margin-bottom: 10px;
 }
 
 .warning {
   text-align: left;
   background: #dece86;
-  border: 1px solid #695e13;
-  padding: 4px;
+  color:black;
+  order: 1px solid #695e13;
+  padding: 5px;
   margin-bottom: 10px;
 }
  
