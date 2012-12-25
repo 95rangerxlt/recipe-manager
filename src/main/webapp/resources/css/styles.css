@@ -135,4 +135,20 @@ button {
   padding: 5px;
   margin-bottom: 10px;
 }
- 
+
+/* override default colors of datatables */
+table.dataTable tr.odd {
+    background-color: #F5ECCE;
+}
+table.dataTable tr.odd td.sorting_1 {
+    background-color: #F3E2A9;
+}
+table.dataTable tr.odd td.sorting_2 {
+    background-color: #F3E2A9;
+}
+table.dataTable tr.even td.sorting_1 {
+    background-color: #F5ECCE;
+}
+table.dataTable tr.even td.sorting_2 {
+    background-color: #F5ECCE;
+}
