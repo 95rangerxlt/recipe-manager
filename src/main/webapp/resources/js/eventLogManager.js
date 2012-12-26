@@ -1,3 +1,6 @@
+// globals
+var eventLogsTable=null;
+
 $(document).ready(function () {
 	$("#logoutButton").button();
 	$("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });

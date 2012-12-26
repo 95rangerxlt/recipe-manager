@@ -1,5 +1,6 @@
 <%@ include file="/resources/frameworks/topFramework.html" %>
 <script src="resources/js/recipeManager.js" type="text/javascript"></script>
+<script src="resources/js/userInfoForm.js" type="text/javascript"></script>
 
 <div id="content" style="width:90%;">
     <h2>Recipe Administration</h2>
@@ -58,6 +59,7 @@
 
 
 <%@ include file="/resources/frameworks/bottomFramework.html" %>
+<%@ include file="/resources/frameworks/userInfoForm.html" %>
  
 
 

@@ -11,9 +11,7 @@ public class Recipe {
 	@Id
 	private String recipeId;
 	
-	@DBRef
-	private User contributer;
-	
+	private String contributerUserName;
 	private String title;
 	private String description;
 	private String url;
@@ -36,14 +34,15 @@ public class Recipe {
 	public void setRecipeId(final String recipeId) {
 		this.recipeId = recipeId;
 	}
-	public void setContributer(User c) {
-		this.contributer = c;
+	public String getContributerUserName() {
+		return this.contributerUserName;
 	}
-
 	public String getTitle() {
 		return title;
 	}
-
+	public void setContributerUserName(String cun) {
+		this.contributerUserName = cun;
+	}
 	public void setTitle(String title) {
 		this.title = title;
 	}
@@ -55,11 +54,6 @@ public class Recipe {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-
-	public User getContributer() {
-		return this.contributer;
-	}
-	
 	public String getUrl() {
 		return url;
 	}

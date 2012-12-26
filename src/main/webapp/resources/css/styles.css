@@ -30,7 +30,10 @@ body {
   line-height: 1.231;  
   background-color: #8291af;
   background-image:url(../images/pageBackground.jpg);
-  background-repeat:repeat;
+/***
+  background-repeat:no-repeat; 
+  background-position:center top; 
+ ***/
 }
 
 #header {

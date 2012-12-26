@@ -43,10 +43,6 @@ public class RecipeController {
 		logger.info("Request to get all recipes.");
 
 		List<Recipe> recipes = recipeService.getAllRecipes();
-		for (Recipe recipe : recipes) {
-			if (recipe.getContributer() != null)
-				recipe.getContributer().setPassword("");
-		}
 		return recipes;
 	}
 
@@ -56,8 +52,6 @@ public class RecipeController {
 		logger.info("Request to get one recipe with id: {}", id);
 
 		Recipe recipe = recipeService.get(id);
-		if (recipe.getContributer() != null)
-			recipe.getContributer().setPassword("");
 		return recipe;
 	}
 
@@ -67,14 +61,11 @@ public class RecipeController {
 	Recipe create(@RequestBody final Recipe entity, Principal p) {
 		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication) p).getPrincipal();
 		User thisUser = ud.getUser();
-		entity.setContributer(thisUser);
+		entity.setContributerUserName(thisUser.getUserName());
 
 		logger.info("Request to create a recipe");
 
 		Recipe recipe = recipeService.create(entity);
-		if (recipe.getContributer() != null)
-			recipe.getContributer().setPassword("");
-
 		return recipe;
 	}
 
@@ -82,22 +73,12 @@ public class RecipeController {
 	@ResponseStatus(HttpStatus.OK)
 	public @ResponseBody
 	Recipe update(@RequestBody final Recipe entity, Principal p) throws RecipeDoesNotExistException {
-		RecipeUserDetails ud = (RecipeUserDetails) ((Authentication) p).getPrincipal();
-		User thisUser = ud.getUser();
-
 		logger.info("Request to update a recipe");
-
-		User uc;
-		if (entity.getContributer().getId() == "")
-			uc  = thisUser;
-		else
-			uc = userService.findOne(entity.getContributer().getId());
 		
-		entity.setContributer(uc);
-
+		// preserve the contributer info
+		Recipe r = recipeService.get(entity.getRecipeId());
+		entity.setContributerUserName(r.getContributerUserName());
 		Recipe recipe = recipeService.update(entity);
-		if (recipe.getContributer() != null)
-			recipe.getContributer().setPassword("");
 		return recipe;
 	}
 
@@ -108,9 +89,6 @@ public class RecipeController {
 		logger.info("Request to delete a recipe");
 		Recipe recipe = recipeService.get(id);
 		recipeService.delete(recipe);
-
-		if (recipe.getContributer() != null)
-			recipe.getContributer().setPassword("");
 		return recipe;
 	}
 
