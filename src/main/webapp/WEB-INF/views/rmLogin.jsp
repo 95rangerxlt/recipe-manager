@@ -10,7 +10,7 @@
      <p class="error" id="loginError"></p>
       <p>
       <label for="j_username">Username</label>
-      <input required id="j_username" name="j_username" value="" title="Enter your Recipe Manager username" tabindex="4" type="text">
+      <input required id="j_username" name="j_username" value="" title="Enter your Recipe Manager username" autofocus autocapitalize="off" tabindex="4" type="text">
       </p>
       <p>
         <label for="j_password">Password</label>
@@ -18,8 +18,8 @@
       </p>
       <p class="remember">
         <input id="signin_submit" value="Sign in" tabindex="6" type="submit">
-        <input id="remember" name="remember_me" value="1" tabindex="7" type="checkbox">
-        <label for="remember">Remember me</label>
+        <input id="_spring_security_remember_me" name="_spring_security_remember_me" value="1" tabindex="7" type="checkbox">
+        <label for="_spring_security_remember_me">Remember me</label>
       </p>
       <p class="forgot"> <a href="javascript:forgotPassword();" id="resend_password_link">Forgot your password?</a></p>
       <p class="forgot-username"> <a href="javascript:forgotUsername();" id="forgot_username_link" title="If you remember your password, try logging in with your email" href="#">Forgot your username?</a></p>
