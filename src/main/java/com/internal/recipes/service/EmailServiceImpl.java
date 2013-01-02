@@ -27,7 +27,7 @@ public class EmailServiceImpl implements EmailService {
 			vars.add(SendGridParameters.API_KEY, this.sendGridApiKey);
 			vars.add(SendGridParameters.SENDER_NAME, message.getSenderName());
 			vars.add(SendGridParameters.SENDER_EMAIL, message.getSenderEmail());
-			vars.add(SendGridParameters.BLIND_COPY_EMAIL, "mherb@cevo.com");
+			vars.add(SendGridParameters.BLIND_COPY_EMAIL, message.getCcEmail());
 			vars.add(SendGridParameters.SUBJECT, message.getSubject());
 			vars.add(SendGridParameters.TEXT, "");
 			vars.add(SendGridParameters.HTML, message.getBody());
