@@ -33,7 +33,7 @@ function processRecipeList(data) {
 }
 
 function addRecipeRow(recipe) {
-	var clink = recipe.contributer != null ? '<address><a href="mailto:' + recipe.contributer.emailAddress + '?Subject=' + recipe.title + '">' + recipe.contributer.firstName + " " + recipe.contributer.lastName + '</a></address>' : "";
+    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '')  + "'" + ');">' + recipe.contributerUserName + '</a></div>' : "";
     var mlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeForm(' + "'" + recipe.recipeId +  "'" + ');">Modify</a></div>';
     var dlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeDeleteForm(' + "'" + recipe.recipeId + "'" + ');">Delete</a></div>';
     var newRow = recipesTable.dataTable().fnAddData([clink,
@@ -147,9 +147,6 @@ function processSubmit() {
 
 	recipe = new Object();
 	recipeId = $("#recipeId").val();
-	var contributer = new Object();
-	contributer.id = $("#recipeContributerId").val();
-	recipe.contributer = contributer;
 	recipe.title =  $("#recipeTitle").val();
 	recipe.url =  $("#recipeUrl").val();
 	recipe.description =  $("#recipeDescription").val();
@@ -172,7 +169,7 @@ function processSubmitResults(recipe, type) {
 	$('#recipeForm').dialog('close');
 	
 	if (type == 'PUT') {
-		var clink = recipe.contributer != null ? '<address><a href="mailto:' + recipe.contributer.emailAddress + '?Subject=' + recipe.title + '">' + recipe.contributer.firstName + " " + recipe.contributer.lastName + '</a></address>' : "";
+	    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '') + "'"  + ');">' + recipe.contributerUserName + '</a></div>' : "";
 		var idp = recipe.recipeId + "_";
 		$("#" + idp + "contributer").html(clink);
 		$("#" + idp + "title").html(recipe.title);

@@ -30,7 +30,10 @@ body {
   line-height: 1.231;  
   background-color: #8291af;
   background-image:url(../images/pageBackground.jpg);
-  background-repeat:repeat;
+/***
+  background-repeat:no-repeat; 
+  background-position:center top; 
+ ***/
 }
 
 #header {
@@ -108,6 +111,7 @@ button {
  }
  
 .error {
+  font-size:.95em;
   text-align: left;
   background: #DE8688;
   color:black;
@@ -135,4 +139,20 @@ button {
   padding: 5px;
   margin-bottom: 10px;
 }
- 
+
+/* override default colors of datatables */
+table.dataTable tr.odd {
+    background-color: #F5ECCE;
+}
+table.dataTable tr.odd td.sorting_1 {
+    background-color: #F3E2A9;
+}
+table.dataTable tr.odd td.sorting_2 {
+    background-color: #F3E2A9;
+}
+table.dataTable tr.even td.sorting_1 {
+    background-color: #F5ECCE;
+}
+table.dataTable tr.even td.sorting_2 {
+    background-color: #F5ECCE;
+}
