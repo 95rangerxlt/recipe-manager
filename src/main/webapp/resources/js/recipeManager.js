@@ -33,7 +33,7 @@ function processRecipeList(data) {
 }
 
 function addRecipeRow(recipe) {
-    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "'"  + ');">' + recipe.contributerUserName + '</a></div>' : "";
+    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '')  + "'" + ');">' + recipe.contributerUserName + '</a></div>' : "";
     var mlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeForm(' + "'" + recipe.recipeId +  "'" + ');">Modify</a></div>';
     var dlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeDeleteForm(' + "'" + recipe.recipeId + "'" + ');">Delete</a></div>';
     var newRow = recipesTable.dataTable().fnAddData([clink,
@@ -169,7 +169,7 @@ function processSubmitResults(recipe, type) {
 	$('#recipeForm').dialog('close');
 	
 	if (type == 'PUT') {
-	    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "'"  + ');">' + recipe.contributerUserName + '</a></div>' : "";
+	    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '') + "'"  + ');">' + recipe.contributerUserName + '</a></div>' : "";
 		var idp = recipe.recipeId + "_";
 		$("#" + idp + "contributer").html(clink);
 		$("#" + idp + "title").html(recipe.title);

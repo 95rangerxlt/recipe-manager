@@ -60,6 +60,7 @@
 
 <%@ include file="/resources/frameworks/bottomFramework.html" %>
 <%@ include file="/resources/frameworks/userInfoForm.html" %>
+<%@ include file="/resources/frameworks/emailMessageForm.html" %>
  
 
 

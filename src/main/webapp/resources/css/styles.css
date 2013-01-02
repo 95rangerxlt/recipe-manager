@@ -111,6 +111,7 @@ button {
  }
  
 .error {
+  font-size:.95em;
   text-align: left;
   background: #DE8688;
   color:black;
