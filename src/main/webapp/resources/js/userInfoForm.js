@@ -118,10 +118,8 @@ function processSubmitEmailMessage() {
 	       data: JSON.stringify(message),
 	       success: function(data) {processSubmitEmailMessageResults(data);},
 	       error: function(xhr,err) {
-	    	   alert("post data: " + JSON.stringify(message));
-	    	   alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
-	    	   alert("responseText: "+xhr.responseText);
-	    	   $('#emailMessageForm').dialog('close');
+	   	    	$("#emailMessageFormErrors").append("<div class=\"error\">" + xhr.responseText + "</div>");
+	   	    	$(":button:contains('Submit')").prop("disabled",true).addClass("ui-state-disabled");	
 	    	}
 	});			    
 
@@ -131,8 +129,6 @@ function processSubmitEmailMessage() {
 function processSubmitEmailMessageResults(emailMessageResponseStatus) {
 	var html = emailMessageResponseStatus.sucess == true ? "<div class=\"success\">" : "<div class=\"error\">";	
 	$("#emailMessageFormErrors").append(html + emailMessageResponseStatus.message + "</div>");
-	$(":button:contains('Submit')").prop("disabled", true).addClass("ui-state-disabled");	
-	
 	$(":button:contains('Submit')").prop("disabled",true).addClass( 'ui-state-disabled'); 
 }
 

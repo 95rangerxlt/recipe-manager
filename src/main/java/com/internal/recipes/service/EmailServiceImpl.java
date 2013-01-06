@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.internal.recipes.domain.EmailMessage;
 import com.internal.recipes.domain.EmailMessageResponseStatus;
+import com.internal.recipes.exception.EmailMessageSendFailureException;
 import com.internal.recipes.util.SendGridParameters;
 
 @Service
@@ -20,7 +21,7 @@ public class EmailServiceImpl implements EmailService {
 	private @Value("${sendGrid.apiUsername}") String apiUsername;
 	private @Value("${sendGrid.apiKey}") String apiKey;
 
-	public EmailMessageResponseStatus send(EmailMessage message) {
+	public EmailMessageResponseStatus send(EmailMessage message) throws EmailMessageSendFailureException {
 		
 		try {
 			MultiValueMap<String, Object> vars = new LinkedMultiValueMap<String, Object>();
@@ -39,7 +40,7 @@ public class EmailServiceImpl implements EmailService {
 			
 		} catch (Exception ex) {
 			logger.error(ex);
-			return new EmailMessageResponseStatus (false, "Error sending email message: " + ex.getMessage());			
+			throw new EmailMessageSendFailureException(ex.getMessage());
 		}
 		
 		return new EmailMessageResponseStatus (true, "Message Sent");
