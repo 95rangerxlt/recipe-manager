@@ -9,11 +9,14 @@
 	<!-- Security Context Config -->
 	<import resource="security-app-context.xml" />
 
+	<context:property-placeholder location="classpath:/META-INF/config/recipe.properties"/>
+	
 	<context:component-scan base-package="com.internal.recipes">
 		<!-- ignore controllers, these will get scanned by the servlet-context -->
 		<context:exclude-filter type="annotation"
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
+
 	<mongo:repositories base-package="com.internal.recipes.repository" />
 
 	<mongo:db-factory dbname="recipedb" />

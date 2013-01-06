@@ -1,6 +1,7 @@
 package com.internal.recipes.service;
 
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -16,15 +17,15 @@ public class EmailServiceImpl implements EmailService {
 	protected static Logger logger = Logger.getLogger("service");
 	private RestTemplate restTemplate = new RestTemplate();
 	
-	private final String sendGridApiUsername = "herbcooking";
-	private final String sendGridApiKey = "ravens52!";
+	private @Value("${sendGrid.apiUsername}") String apiUsername;
+	private @Value("${sendGrid.apiKey}") String apiKey;
 
 	public EmailMessageResponseStatus send(EmailMessage message) {
 		
 		try {
 			MultiValueMap<String, Object> vars = new LinkedMultiValueMap<String, Object>();
-			vars.add(SendGridParameters.API_USER, this.sendGridApiUsername);
-			vars.add(SendGridParameters.API_KEY, this.sendGridApiKey);
+			vars.add(SendGridParameters.API_USER, this.apiUsername);
+			vars.add(SendGridParameters.API_KEY, this.apiKey);
 			vars.add(SendGridParameters.SENDER_NAME, message.getSenderName());
 			vars.add(SendGridParameters.SENDER_EMAIL, message.getSenderEmail());
 			vars.add(SendGridParameters.BLIND_COPY_EMAIL, message.getCcEmail());

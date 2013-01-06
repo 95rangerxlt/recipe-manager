@@ -18,8 +18,9 @@
         	authentication-failure-url="/rmLogin/error=true"
         />
         
-        <remember-me services-ref="rememberMeServices" />
- 
+        <!-- remember me -->
+     	<remember-me key="rememberMeKey"/>
+        
  	<!-- 
     	<logout invalidate-session="true" success-handler-ref="authLogoutSucc" />
     -->
@@ -37,12 +38,6 @@
 <beans:bean class="com.internal.recipes.security.AuthenticationSuccessHandler" name="authSucc"></beans:bean>
 <beans:bean class="com.internal.recipes.security.AuthenticationFailureHandler" name="authFail"></beans:bean>
 <beans:bean class="org.springframework.security.crypto.password.StandardPasswordEncoder" name="passEncoder" ></beans:bean>
-<beans:bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices">
-    <beans:property name="userDetailsService" ref="recipeUserDetailsService" />
-    <beans:property name="tokenRepository" ref="RememberMeTokenRepository" />
-    <beans:property name="key" value="myownkey" />
-</beans:bean>
-
 
 <!--
 	<beans:bean class="com.internal.recipes.security.AuthenticationLogoutSucessHandler" name="authLogoutSucc"></beans:bean>   
