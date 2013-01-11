@@ -34,7 +34,7 @@ public class RecipeServiceImpl implements RecipeService {
 	 */
 	public Recipe create(Recipe recipe) {
 		String logData = "created recipe " + recipe.getTitle();
-		EventLog eventLog = new EventLog(EventType.EVENT_RECIPE_ADMINISTRATION, logData);
+		EventLog eventLog = new EventLog(EventType.EVENT_RECIPE_CREATED, logData);
 		publisher.publishEvent(new RecipeManagerEvent(this, eventLog));
 		return recipeRepository.save(recipe);
 	}
@@ -47,7 +47,7 @@ public class RecipeServiceImpl implements RecipeService {
 			return false;
 		}
 		String logData = "deleted recipe " + recipe.getTitle();
-		EventLog eventLog = new EventLog(EventType.EVENT_RECIPE_ADMINISTRATION, logData);
+		EventLog eventLog = new EventLog(EventType.EVENT_RECIPE_DELETED, logData);
 		publisher.publishEvent(new RecipeManagerEvent(this, eventLog));
 		
 		recipeRepository.delete(recipe);
@@ -62,7 +62,7 @@ public class RecipeServiceImpl implements RecipeService {
 			throw new RecipeDoesNotExistException(recipe.getRecipeId());
 		}
 		String logData = "modified recipe " + recipe.getTitle();
-		EventLog eventLog = new EventLog(EventType.EVENT_RECIPE_ADMINISTRATION, logData);
+		EventLog eventLog = new EventLog(EventType.EVENT_RECIPE_MODIFIED, logData);
 		publisher.publishEvent(new RecipeManagerEvent(this, eventLog));
 		
 		return recipeRepository.save(recipe);
