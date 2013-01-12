@@ -1,5 +1,7 @@
 package com.internal.recipes.controller;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -10,15 +12,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.internal.recipes.event.RecipeEventListener;
+
+import com.internal.recipes.event.SSERecipeEventListener;
+
 
 
 @Controller
 public class SSEController {
 	
 	@Autowired
-	private RecipeEventListener recipeEventListener;
-
+	SSERecipeEventListener eventListener;
+	
 	private static final Logger logger = LoggerFactory.getLogger(SSEController.class);
 	private int count = 0;
 	
@@ -29,21 +33,9 @@ public class SSEController {
 	}
 
 	@RequestMapping("/sse")
-	public @ResponseBody String sendEvent(HttpServletResponse response) {
-		this.count++;
-		
+	public @ResponseBody void sendEvent(HttpServletResponse response) throws IOException {
 		response.setContentType("text/event-stream");
-		
-		try {
-			Thread.sleep(60000);
-		}
-		catch (InterruptedException e) {
-			logger.error("SSE: InterruptedException, msg is " + e.getMessage());
-		}
-
-		String event = "data: Testing Sequence Number " + count + "\n\n"; 
-		logger.info("SSE: sending an Event: " + event);
-		return event;
+		eventListener.setServletOutputStream(response.getOutputStream());
+		eventListener.subscribe();				
 	}
-
 }

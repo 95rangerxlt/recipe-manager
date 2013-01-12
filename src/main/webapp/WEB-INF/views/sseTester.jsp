@@ -20,6 +20,7 @@ $(document).ready(function () {
 
 	}
 	
+	/***
 	eventSource.onopen = function(e) {
 		console.log("onopen fired");
 		console.log(e);
@@ -29,8 +30,17 @@ $(document).ready(function () {
 		console.log("onerror fired");
 		console.log("ready state is " + e.target.readyState);		
 	}
+	***/
 	
-	
+	eventSource.addEventListener('Recipe modified', function(e) {
+		$("#sseContent").append("Recipe modified event received, data: " + e.data + "<br>");
+	}, false);
+
+
+	eventSource.addEventListener('User modified', function(e) {
+		$("#sseContent").append("User modified event received, data: " + e.data + "<br>");
+	}, false);
+
 });
 	
 

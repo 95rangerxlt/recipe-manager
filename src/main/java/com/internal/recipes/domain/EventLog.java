@@ -39,6 +39,9 @@ public class EventLog {
 	public String getLogType() {
 		return this.logType.getType();
 	}
+	public EventType getEventType() {
+		return this.logType;
+	}
 
 	public Date getLogDate() {
 		return this.logDate;

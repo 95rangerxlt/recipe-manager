@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 		String logData = "created user " + user.getUserName() + " " + user.getFirstName() + " " + user.getLastName() + " " + user.getEmailAddress();
 		EventLog el = new EventLog(EventType.EVENT_USER_CREATED, logData);
 		el.setActor(user.getUserName());
-		publisher.publishEvent(new RecipeManagerEvent(this, el));
+		publisher.publishEvent(new RecipeManagerEvent(user, el));
 		
 		return userRepository.save(user);
 	}
@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 		String logData = "modified user " + user.getUserName() + " " + user.getFirstName() + " " + user.getLastName() + " " + user.getEmailAddress();
 		EventLog el = new EventLog(EventType.EVENT_USER_MODIFIED, logData);
 		el.setActor(user.getUserName());
-		publisher.publishEvent(new RecipeManagerEvent(this, el));
+		publisher.publishEvent(new RecipeManagerEvent(user, el));
 		
 		return userRepository.save(user);
 	}
@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
 		String logData = "deleted user " + u.getUserName() + " " + u.getFirstName() + " " + u.getLastName() + " " + u.getEmailAddress();
 		EventLog el = new EventLog(EventType.EVENT_USER_DELETED, logData);
 		el.setActor(u.getUserName());
-		publisher.publishEvent(new RecipeManagerEvent(this, el));
+		publisher.publishEvent(new RecipeManagerEvent(user, el));
 		
 		userRepository.delete(u);
 		return true;
