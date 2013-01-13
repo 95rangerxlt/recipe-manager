@@ -2,24 +2,41 @@
  var recipesTable;
  
 $(document).ready(function () {
-  $("#addRecipeButton").button();
-  $("#addRecipeButton").click(function() { showRecipeForm(0); return false; });
-  $("#eventLogButton").button();
-  $("#eventLogButton").click(function() { location.href = 'eventLogManager'; });
-  $("#logoutButton").button();
-  $("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });
-  $("#usersButton").button();
-  $("#usersButton").click(function() { location.href = 'userManager'; });
-  $("#myAccountButton").button();
-  $("#myAccountButton").click(function() { location.href = 'myAccountManager'; });
-  recipeFormInit();
-
-	recipesTable = $('#recipesTable').dataTable({
+	  $("#addRecipeButton").button();
+	  $("#addRecipeButton").click(function() { showRecipeForm(0); return false; });
+	  $("#eventLogButton").button();
+	  $("#eventLogButton").click(function() { location.href = 'eventLogManager'; });
+	  $("#logoutButton").button();
+	  $("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });
+	  $("#usersButton").button();
+	  $("#usersButton").click(function() { location.href = 'userManager'; });
+	  $("#myAccountButton").button();
+	  $("#myAccountButton").click(function() { location.href = 'myAccountManager'; });
+	  recipeFormInit();
+	
+	  recipesTable = $('#recipesTable').dataTable({
 	    "bJQueryUI": true,
 	    "iDisplayLength": 25,
 	    "sPaginationType": "full_numbers",
 	    "sDom": '<"fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip>'
 	  });
+
+	// start listening for recipe events
+	var eventSource = new EventSource('/recipe-manager/sse');
+	eventSource.addEventListener('Recipe modified', function(e) {
+		console.log("received event: " + e.data);
+		updateRecipeRow($.parseJSON(e.data));  
+	}, false);
+	
+	eventSource.addEventListener('Recipe created', function(e) {
+		console.log("received event: " + e.data);
+		addRecipeRow($.parseJSON(e.data));  
+	}, false);
+
+	eventSource.addEventListener('Recipe deleted', function(e) {
+		console.log("received event: " + e.data);
+		deleteRecipeRow($.parseJSON(e.data));  
+	}, false);
 
 	$.get('recipes', function(data) {processRecipeList(data);});  
 });
@@ -28,11 +45,12 @@ function processRecipeList(data) {
 	$.each(data, function(i, recipe) {
 		addRecipeRow(recipe);
 	});
-
-	//console.log(data);
 }
 
 function addRecipeRow(recipe) {
+	if ($("#" + recipe.recipeId + "_contributer").length > 0)
+		return;
+	
     var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '')  + "'" + ');">' + recipe.contributerUserName + '</a></div>' : "";
     var mlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeForm(' + "'" + recipe.recipeId +  "'" + ');">Modify</a></div>';
     var dlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeDeleteForm(' + "'" + recipe.recipeId + "'" + ');">Delete</a></div>';
@@ -161,22 +179,24 @@ function processSubmit() {
         dataType: "json",
         data: JSON.stringify(recipe),
         success: function(data) {processSubmitResults(data, type);},
-        error : function(request, status, error) {console.log(JSON.stringify(recipe)); alert("Failed: " + error);}
+        error : function(request, status, error) {console.log(JSON.stringify(recipe)); console.log("Failed: " + error);}
 	});		
+	
+	$('#recipeForm').dialog('close');
 }
 
+function updateRecipeRow (recipe) {
+    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '') + "'"  + ');">' + recipe.contributerUserName + '</a></div>' : "";
+	var idp = recipe.recipeId + "_";
+	$("#" + idp + "contributer").html(clink);
+	$("#" + idp + "title").html(recipe.title);
+	$("#" + idp + "url").html('<a target="_blank" href="' + recipe.url + '">' + recipe.url + '</a>');
+	$("#" + idp + "description").html(recipe.description);
+	$("#" + idp + "notes").html(recipe.notes);	
+}
 function processSubmitResults(recipe, type) {	
-	$('#recipeForm').dialog('close');
-	
-	if (type == 'PUT') {
-	    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '') + "'"  + ');">' + recipe.contributerUserName + '</a></div>' : "";
-		var idp = recipe.recipeId + "_";
-		$("#" + idp + "contributer").html(clink);
-		$("#" + idp + "title").html(recipe.title);
-		$("#" + idp + "url").html('<a target="_blank" href="' + recipe.url + '">' + recipe.url + '</a>');
-		$("#" + idp + "description").html(recipe.description);
-		$("#" + idp + "notes").html(recipe.notes);
-	}
+	if (type == 'PUT') 
+		updateRecipeRow(recipe);
 	else 
 		addRecipeRow(recipe);
 }
@@ -189,12 +209,12 @@ function processDeleteRecipeSubmit() {
         url: 'recipes/' + recipeId,
         contentType: "application/json",
         dataType: "json",
-        success: function(data) {processDeleteRecipeSubmitResults(data);},
-        error : function(request, status, error) {alert("Failed: " + error);}
+        success: function(data) {deleteRecipeRow(data);},
+        error : function(request, status, error) {console.log("Failed: " + error);}
 	});			
 }
 
-function processDeleteRecipeSubmitResults(recipe) {
+function deleteRecipeRow(recipe) {
 	$('#recipeDeleteForm').dialog('close');
 
 	// remove this recipe from the table

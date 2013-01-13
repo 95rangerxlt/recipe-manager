@@ -1,8 +1,10 @@
 package com.internal.recipes.controller;
 
 import java.io.IOException;
+import java.security.Principal;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,10 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
 import com.internal.recipes.event.SSERecipeEventListener;
-
-
 
 @Controller
 public class SSEController {
@@ -24,18 +23,17 @@ public class SSEController {
 	SSERecipeEventListener eventListener;
 	
 	private static final Logger logger = LoggerFactory.getLogger(SSEController.class);
-	private int count = 0;
-	
+		
 	@RequestMapping(value = "/sseTester", method = RequestMethod.GET)
 	public String sseTester() {
-		logger.info("SSE Tester invoked");
+		logger.info("/sseTester invoked");
 		return "sseTester";
 	}
 
-	@RequestMapping("/sse")
-	public @ResponseBody void sendEvent(HttpServletResponse response) throws IOException {
+	@RequestMapping(value = "/sse", method = RequestMethod.GET)
+	public @ResponseBody void sendEvent(HttpSession session, HttpServletResponse response, Principal p) throws IOException {
+		//logger.info("/sse invoked with request id: " + response.getOutputStream().hashCode());
 		response.setContentType("text/event-stream");
-		eventListener.setServletOutputStream(response.getOutputStream());
-		eventListener.subscribe();				
+		eventListener.subscribe(Integer.toBinaryString(response.getOutputStream().hashCode()), response.getOutputStream());
 	}
 }

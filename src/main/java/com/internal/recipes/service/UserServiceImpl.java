@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
 			throw new UserNameNotUniqueException(user.getUserName());
 		}
 		
-		String logData = "created user " + user.getUserName() + " " + user.getFirstName() + " " + user.getLastName() + " " + user.getEmailAddress();
+		User newUser =  userRepository.save(user);
+		String logData = "created user " + newUser.getUserName() + " " + newUser.getFirstName() + " " + newUser.getLastName() + " " + newUser.getEmailAddress();
 		EventLog el = new EventLog(EventType.EVENT_USER_CREATED, logData);
-		el.setActor(user.getUserName());
-		publisher.publishEvent(new RecipeManagerEvent(user, el));
-		
-		return userRepository.save(user);
+		el.setActor(newUser.getUserName());
+		publisher.publishEvent(new RecipeManagerEvent(newUser, el));
+		return newUser;
 	}
 
 

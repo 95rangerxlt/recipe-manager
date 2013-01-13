@@ -34,9 +34,10 @@ public class RecipeServiceImpl implements RecipeService {
 	 */
 	public Recipe create(Recipe recipe) {
 		String logData = "created recipe " + recipe.getTitle();
+		Recipe newRecipe = recipeRepository.save(recipe);
 		EventLog eventLog = new EventLog(EventType.EVENT_RECIPE_CREATED, logData);
-		publisher.publishEvent(new RecipeManagerEvent(recipe, eventLog));
-		return recipeRepository.save(recipe);
+		publisher.publishEvent(new RecipeManagerEvent(newRecipe, eventLog));
+		return newRecipe;
 	}
 	
 	/* (non-Javadoc)

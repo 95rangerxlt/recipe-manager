@@ -1,11 +1,10 @@
 package com.internal.recipes.event;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import javax.servlet.ServletOutputStream;
 
-import org.codehaus.jackson.JsonGenerationException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,27 +17,23 @@ import com.internal.recipes.domain.RecipeManagerEvent;
 import com.internal.recipes.domain.User;
 
 @Component
-public class SSERecipeEventListener implements ApplicationListener<RecipeManagerEvent>  {
+public class SSERecipeEventListener  implements ApplicationListener<RecipeManagerEvent>   {
 				
-	private final Logger mylogger = LoggerFactory.getLogger(SSERecipeEventListener.class);	
-	private ServletOutputStream servletOutputStream;	
-	private boolean subscribed = false;
+	private final Logger logger = LoggerFactory.getLogger(SSERecipeEventListener.class);	
+	HashMap<String, ServletOutputStream> subscribers = new HashMap<String, ServletOutputStream>();
+
 	
-	public void subscribe() {
-		this.subscribed = true;
+	public void subscribe(String key, ServletOutputStream sos) {
+		if (! subscribers.containsKey(key))
+			subscribers.put(key, sos);
+		//logger.info("subscribe, count: " + subscribers.size());
+		//logger.info("Map:" + subscribers.toString());
 	}
-	public void unsubscribe() {
-		this.subscribed = false;
+	public void unsubscribe(String key) {
+		subscribers.remove(key);
 	}
-	
-	public void setServletOutputStream(ServletOutputStream sos) {
-		this.servletOutputStream = sos;
-	}
-	
-	public void onApplicationEvent(RecipeManagerEvent event)  {
-		if (! subscribed)
-			return;
 		
+	public void onApplicationEvent(RecipeManagerEvent event)  {		
 		ObjectMapper om = new ObjectMapper();
 		String returnJson = "";
 
@@ -51,15 +46,9 @@ public class SSERecipeEventListener implements ApplicationListener<RecipeManager
 				String userJson = "";
 				try {
 					userJson = om.writeValueAsString(user);
-				} catch (JsonGenerationException e) {
-					// TODO Auto-generated catch block
+				} catch (Exception e) {
 					e.printStackTrace();
-				} catch (JsonMappingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					returnJson = "error: " + e.getMessage();
 				}
 				
 				returnJson = "event: " + event.getEventLog().getLogType() + "\n" + "data: " + userJson + "\n\n";	
@@ -73,15 +62,9 @@ public class SSERecipeEventListener implements ApplicationListener<RecipeManager
 				String recipeJson = "";
 				try {
 					recipeJson = om.writeValueAsString(recipe);
-				} catch (JsonGenerationException e) {
-					// TODO Auto-generated catch block
+				} catch (Exception e) {
 					e.printStackTrace();
-				} catch (JsonMappingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					returnJson = "error: " + e.getMessage();
 				}
 								
 				returnJson = "event: " + event.getEventLog().getLogType() + "\n" + "data: " + recipeJson + "\n\n";	
@@ -92,34 +75,29 @@ public class SSERecipeEventListener implements ApplicationListener<RecipeManager
 				String eventLogJson = "";
 				try {
 					eventLogJson = om.writeValueAsString(eventLog);
-				} catch (JsonGenerationException e) {
-					// TODO Auto-generated catch block
+				} catch (Exception e) {
 					e.printStackTrace();
-				} catch (JsonMappingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					returnJson = "error: " + e.getMessage();
 				}
 				
 				returnJson = "event: " + event.getEventLog().getLogType() + "\n" +  "data: " + eventLogJson + "\n\n";	
 				break;
 				
 			default:
-				mylogger.info("SSE: received RecipeManagerEvent of unknown type " + event.getEventLog().getLogType());		
+				logger.info("SSE: received RecipeManagerEvent of unknown type " + event.getEventLog().getLogType());		
 				break;				
 				
 		}
 		
-		try {
-			servletOutputStream.write(returnJson.getBytes());
-			//servletOutputStream.flush();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		for (String key :  subscribers.keySet()) {
+			logger.info("SSERecipeEventListener: writing out to servlet output stream with key " + key);
+			try {
+				subscribers.get(key).write(returnJson.getBytes());
+			} catch (IOException e) {
+				logger.info("SSERecipeEventListener: error writing to output stream for client " + key);
+			}
 		}
 		
-		mylogger.info(returnJson);
+		logger.info(returnJson);
 	}
 }
