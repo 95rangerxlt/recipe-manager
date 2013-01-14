@@ -1,9 +1,8 @@
 package com.internal.recipes.event;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
-
-import javax.servlet.ServletOutputStream;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -20,13 +19,17 @@ import com.internal.recipes.domain.User;
 public class SSERecipeEventListener  implements ApplicationListener<RecipeManagerEvent>   {
 				
 	private final Logger logger = LoggerFactory.getLogger(SSERecipeEventListener.class);	
-	HashMap<String, ServletOutputStream> subscribers = new HashMap<String, ServletOutputStream>();
+	HashMap<String, PrintWriter> subscribers = new HashMap<String, PrintWriter>();
+	private int logCount = 0;
 
 	
-	public void subscribe(String key, ServletOutputStream sos) {
+	public void subscribe(String key, PrintWriter pw) {
 		if (! subscribers.containsKey(key))
-			subscribers.put(key, sos);
-		//logger.info("subscribe, count: " + subscribers.size());
+			subscribers.put(key, pw);
+		if (++logCount > 100) {
+			logCount = 0;
+			logger.info("subscribe, count: " + subscribers.size());
+		}
 		//logger.info("Map:" + subscribers.toString());
 	}
 	public void unsubscribe(String key) {
@@ -67,6 +70,7 @@ public class SSERecipeEventListener  implements ApplicationListener<RecipeManage
 					returnJson = "error: " + e.getMessage();
 				}
 								
+				//returnJson = "data: " + "{" + "\"eventType\"" + ":" + "\"" + event.getEventLog().getLogType() + "\"" + "," + "\"eventData\"" + ":" + recipeJson + "}" + "\n\n";	
 				returnJson = "event: " + event.getEventLog().getLogType() + "\n" + "data: " + recipeJson + "\n\n";	
 				break;
 				
@@ -91,11 +95,8 @@ public class SSERecipeEventListener  implements ApplicationListener<RecipeManage
 		
 		for (String key :  subscribers.keySet()) {
 			logger.info("SSERecipeEventListener: writing out to servlet output stream with key " + key);
-			try {
-				subscribers.get(key).write(returnJson.getBytes());
-			} catch (IOException e) {
-				logger.info("SSERecipeEventListener: error writing to output stream for client " + key);
-			}
+			PrintWriter pw = subscribers.get(key);
+			pw.write(returnJson);
 		}
 		
 		logger.info(returnJson);

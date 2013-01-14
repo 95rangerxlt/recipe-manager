@@ -1,5 +1,6 @@
  // globals
  var recipesTable;
+ var eventSource;
  
 $(document).ready(function () {
 	  $("#addRecipeButton").button();
@@ -21,25 +22,30 @@ $(document).ready(function () {
 	    "sDom": '<"fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip>'
 	  });
 
+	$.get('recipes', function(data) {processRecipeList(data);});  
+	
+	startEventListeners();
+});
+
+function startEventListeners() {
 	// start listening for recipe events
-	var eventSource = new EventSource('/recipe-manager/sse');
+	eventSource = new EventSource(window.location.pathname + '/sse');
+	
 	eventSource.addEventListener('Recipe modified', function(e) {
-		console.log("received event: " + e.data);
+		console.log("received Recipe Modified event: " + e.data);
 		updateRecipeRow($.parseJSON(e.data));  
 	}, false);
 	
 	eventSource.addEventListener('Recipe created', function(e) {
-		console.log("received event: " + e.data);
+		console.log("received Recipe created event: " + e.data);
 		addRecipeRow($.parseJSON(e.data));  
 	}, false);
 
 	eventSource.addEventListener('Recipe deleted', function(e) {
-		console.log("received event: " + e.data);
+		console.log("received Recipe deleted event: " + e.data);
 		deleteRecipeRow($.parseJSON(e.data));  
-	}, false);
-
-	$.get('recipes', function(data) {processRecipeList(data);});  
-});
+	}, false);	
+}
 
 function processRecipeList(data) {	
 	$.each(data, function(i, recipe) {
@@ -172,6 +178,7 @@ function processSubmit() {
 	var type = recipeId == "" ? "POST" : "PUT";
 	if (type == 'PUT')
 		recipe.recipeId = recipeId;
+
 	$.ajax({
         type: type,
         url: 'recipes',
@@ -179,10 +186,9 @@ function processSubmit() {
         dataType: "json",
         data: JSON.stringify(recipe),
         success: function(data) {processSubmitResults(data, type);},
-        error : function(request, status, error) {console.log(JSON.stringify(recipe)); console.log("Failed: " + error);}
+        error : function(request, status, error) {console.log(JSON.stringify(recipe)); alert("Failed: " + error);}
 	});		
 	
-	$('#recipeForm').dialog('close');
 }
 
 function updateRecipeRow (recipe) {
@@ -195,6 +201,8 @@ function updateRecipeRow (recipe) {
 	$("#" + idp + "notes").html(recipe.notes);	
 }
 function processSubmitResults(recipe, type) {	
+	$('#recipeForm').dialog('close');
+
 	if (type == 'PUT') 
 		updateRecipeRow(recipe);
 	else 

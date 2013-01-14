@@ -3,6 +3,7 @@ package com.internal.recipes.controller;
 import java.io.IOException;
 import java.security.Principal;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -31,9 +32,9 @@ public class SSEController {
 	}
 
 	@RequestMapping(value = "/sse", method = RequestMethod.GET)
-	public @ResponseBody void sendEvent(HttpSession session, HttpServletResponse response, Principal p) throws IOException {
-		//logger.info("/sse invoked with request id: " + response.getOutputStream().hashCode());
-		response.setContentType("text/event-stream");
-		eventListener.subscribe(Integer.toBinaryString(response.getOutputStream().hashCode()), response.getOutputStream());
+	public @ResponseBody void sendEvent(HttpSession session, HttpServletRequest request, HttpServletResponse response, Principal p) throws IOException  {
+		//logger.info("/sse invoked with response hashcode : "  + session.hashCode());
+		response.setContentType("text/event-stream; charset=utf-8");
+		eventListener.subscribe(Integer.toString(response.getWriter().hashCode()), response.getWriter());
 	}
 }

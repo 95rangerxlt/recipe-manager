@@ -11,7 +11,7 @@ Test of streaming server sent events
 var eventSource = null;
 
 $(document).ready(function () {
-	eventSource = new EventSource('/recipe-manager/sse');
+	eventSource = new EventSource(window.location.pathname + 'sse');
 	
 	eventSource.onmessage = function (e) {
 		console.log("onmessage fired");
