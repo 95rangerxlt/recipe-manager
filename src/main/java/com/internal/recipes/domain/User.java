@@ -1,5 +1,6 @@
 package com.internal.recipes.domain;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -8,8 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 
 @Document
-public class User {
+public class User implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	private String id;
 	private String userName;
