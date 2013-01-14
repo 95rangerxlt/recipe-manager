@@ -32,7 +32,7 @@ $(document).ready(function () {
 
 function startEventListeners() {
 	// start listening for recipe events
-	eventSource = new EventSource(window.location.pathname + '/../sse');
+	eventSource = new EventSource('/recipe-manager/sse');
 	
 	eventSource.addEventListener('User modified', function(e) {
 		console.log("received User Modified event: " + e.data);
