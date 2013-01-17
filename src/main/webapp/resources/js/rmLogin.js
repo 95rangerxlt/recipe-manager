@@ -73,7 +73,7 @@ function processForgotAccountFormSubmit() {
 	
 	$.ajax({
 	    type: 'GET',
-	    url: 'users/getUserByEmailAddress/' + $("#email").val() + "/",
+	    url: '/recipe-manager/users/getUserByEmailAddress/' + $("#email").val() + "/",
         contentType: "application/json; charset=utf-8",
         dataType: "json",
 	    success: function(data) {processGetUserByEmailResults(data, $("#actionType").val());},
@@ -88,9 +88,9 @@ function processGetUserByEmailResults(user, actionType) {
 	// if we got here, it means the email entered is legit and we need to reqest a temp password or request the users username and send to this user
 	var url
 	if (actionType == "recoverPassword") 
-	    url = "users/recoverAccountPassword";		
+	    url = "/recipe-manager/users/recoverAccountPassword";		
 	else
-		url = "users/recoverAccountUsername";	
+		url = "/recipe-manager/users/recoverAccountUsername";	
 
 	$("#forgotAccountFormErrors").html("");
 	
