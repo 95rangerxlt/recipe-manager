@@ -21,7 +21,7 @@ import com.internal.recipes.event.SSERecipeEventListener;
 public class SSEController {
 	
 	@Autowired
-	SSERecipeEventListener eventListener;
+	private SSERecipeEventListener eventListener;
 	
 	private static final Logger logger = LoggerFactory.getLogger(SSEController.class);
 		
@@ -34,7 +34,8 @@ public class SSEController {
 	@RequestMapping(value = "/sse", method = RequestMethod.GET)
 	public @ResponseBody void sendEvent(HttpSession session, HttpServletRequest request, HttpServletResponse response, Principal p) throws IOException  {
 		response.setContentType("text/event-stream; charset=utf-8");
-		eventListener.subscribe(Integer.toString(response.getWriter().hashCode()), response.getWriter());
+		eventListener.subscribe(p.getName() + Integer.toString(response.getWriter().hashCode()), response.getWriter());
+		//eventListener.subscribe(Integer.toString(response.getWriter().hashCode()), response.getWriter());
 		//logger.info("/sse invoked with response hashcode : "  + response.getWriter().hashCode());
 	}
 }

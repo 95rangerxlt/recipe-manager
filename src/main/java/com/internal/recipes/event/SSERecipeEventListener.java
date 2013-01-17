@@ -1,8 +1,8 @@
 package com.internal.recipes.event;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import com.internal.recipes.domain.User;
 public class SSERecipeEventListener  implements ApplicationListener<RecipeManagerEvent>   {
 				
 	private final Logger logger = LoggerFactory.getLogger(SSERecipeEventListener.class);	
-	private HashMap<String, PrintWriter> subscribers = new HashMap<String, PrintWriter>();
+	private ConcurrentHashMap<String, PrintWriter> subscribers = new ConcurrentHashMap<String, PrintWriter>();
 	private int logCount = 0;
 
 	
@@ -31,8 +31,13 @@ public class SSERecipeEventListener  implements ApplicationListener<RecipeManage
 			logger.info ("subscribe, Currently there are " + subscribers.size() + " subscribers listening");
 		}
 	}
-	public void unsubscribe(String key) {
-		subscribers.remove(key);
+	public void unsubscribe(String username) {
+		for (String key :  subscribers.keySet()) {
+			if (key.startsWith(username)) { 
+				subscribers.remove(key);
+				logger.info ("unsubscribe listener with key {}, Currently there are {} subscribers listening", key, subscribers.size());
+			}
+		}
 	}
 		
 	public void onApplicationEvent(RecipeManagerEvent event)  {		

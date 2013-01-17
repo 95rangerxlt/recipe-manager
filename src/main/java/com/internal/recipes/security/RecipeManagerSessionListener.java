@@ -1,5 +1,6 @@
 package com.internal.recipes.security;
 
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.http.HttpSessionEvent;
@@ -14,6 +15,7 @@ import com.internal.recipes.domain.EventLog;
 import com.internal.recipes.domain.EventType;
 import com.internal.recipes.domain.RecipeManagerEvent;
 import com.internal.recipes.domain.User;
+import com.internal.recipes.event.SSERecipeEventListener;
 import com.internal.recipes.service.UserService;
 
 public class RecipeManagerSessionListener implements ServletContextListener, HttpSessionListener {
@@ -22,6 +24,10 @@ public class RecipeManagerSessionListener implements ServletContextListener, Htt
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private SSERecipeEventListener eventListener;
+
 	
 	public void contextDestroyed(ServletContextEvent arg0) {
 		// TODO Auto-generated method stub		
@@ -41,8 +47,11 @@ public class RecipeManagerSessionListener implements ServletContextListener, Htt
 
 	public void sessionDestroyed(HttpSessionEvent event) {
 		SecurityContext context = (SecurityContext) event.getSession().getAttribute("SPRING_SECURITY_CONTEXT");
-		if (context != null) {
+		if (context != null) {			
 			RecipeUserDetails user = (RecipeUserDetails)context.getAuthentication().getPrincipal();
+			
+			eventListener.unsubscribe(user.getUsername());
+			
 			User thisUser = userService.findByUserName(user.getUsername());
 			EventLog el = new EventLog(EventType.EVENT_SECURITY,  "logged out as " + thisUser.getUserName());
 			el.setActor(thisUser.getUserName());
