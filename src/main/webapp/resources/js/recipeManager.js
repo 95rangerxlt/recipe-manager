@@ -24,25 +24,24 @@ $(document).ready(function () {
 
 	$.get('recipes', function(data) {processRecipeList(data);});  
 	
-	startEventListeners();
 });
 
 function startEventListeners() {
 	// start listening for recipe events
-	eventSource = new EventSource('/recipe-manager/sse');
+	eventSource = new EventSource('sse');
 	
 	eventSource.addEventListener('Recipe modified', function(e) {
-		console.log("received Recipe Modified event: " + e.data);
+		//console.log("received Recipe Modified event: " + e.data);
 		updateRecipeRow($.parseJSON(e.data));  
 	}, false);
 	
 	eventSource.addEventListener('Recipe created', function(e) {
-		console.log("received Recipe created event: " + e.data);
+		//console.log("received Recipe created event: " + e.data);
 		addRecipeRow($.parseJSON(e.data));  
 	}, false);
 
 	eventSource.addEventListener('Recipe deleted', function(e) {
-		console.log("received Recipe deleted event: " + e.data);
+		//console.log("received Recipe deleted event: " + e.data);
 		deleteRecipeRow($.parseJSON(e.data));  
 	}, false);	
 }
@@ -51,6 +50,8 @@ function processRecipeList(data) {
 	$.each(data, function(i, recipe) {
 		addRecipeRow(recipe);
 	});
+
+	startEventListeners();
 }
 
 function addRecipeRow(recipe) {

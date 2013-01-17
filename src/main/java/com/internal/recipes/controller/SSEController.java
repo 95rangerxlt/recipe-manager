@@ -33,8 +33,8 @@ public class SSEController {
 
 	@RequestMapping(value = "/sse", method = RequestMethod.GET)
 	public @ResponseBody void sendEvent(HttpSession session, HttpServletRequest request, HttpServletResponse response, Principal p) throws IOException  {
-		//logger.info("/sse invoked with response hashcode : "  + session.hashCode());
 		response.setContentType("text/event-stream; charset=utf-8");
 		eventListener.subscribe(Integer.toString(response.getWriter().hashCode()), response.getWriter());
+		//logger.info("/sse invoked with response hashcode : "  + response.getWriter().hashCode());
 	}
 }

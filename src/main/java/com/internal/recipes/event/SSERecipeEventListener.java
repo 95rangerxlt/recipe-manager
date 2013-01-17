@@ -19,7 +19,7 @@ import com.internal.recipes.domain.User;
 public class SSERecipeEventListener  implements ApplicationListener<RecipeManagerEvent>   {
 				
 	private final Logger logger = LoggerFactory.getLogger(SSERecipeEventListener.class);	
-	HashMap<String, PrintWriter> subscribers = new HashMap<String, PrintWriter>();
+	private HashMap<String, PrintWriter> subscribers = new HashMap<String, PrintWriter>();
 	private int logCount = 0;
 
 	
@@ -28,15 +28,16 @@ public class SSERecipeEventListener  implements ApplicationListener<RecipeManage
 			subscribers.put(key, pw);
 		if (++logCount > 100) {
 			logCount = 0;
-			logger.info("subscribe, count: " + subscribers.size());
+			logger.info ("subscribe, Currently there are " + subscribers.size() + " subscribers listening");
 		}
-		//logger.info("Map:" + subscribers.toString());
 	}
 	public void unsubscribe(String key) {
 		subscribers.remove(key);
 	}
 		
 	public void onApplicationEvent(RecipeManagerEvent event)  {		
+		logger.info ("onApplicationEvent, Currently there are " + subscribers.size() + " subscribers listening");
+		
 		ObjectMapper om = new ObjectMapper();
 		String returnJson = "";
 

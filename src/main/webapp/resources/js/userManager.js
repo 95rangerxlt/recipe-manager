@@ -25,27 +25,25 @@ $(document).ready(function () {
 
 	$.get('users', function(data) {processUserList(data);}); 
 	$.get('users/roles', function(data) {roles = data;}); 
-	
-	startEventListeners();
-	
+		
 });
 
 function startEventListeners() {
 	// start listening for recipe events
-	eventSource = new EventSource('/recipe-manager/sse');
+	eventSource = new EventSource('sse');
 	
 	eventSource.addEventListener('User modified', function(e) {
-		console.log("received User Modified event: " + e.data);
+		//console.log("received User Modified event: " + e.data);
 		updateUserRow($.parseJSON(e.data));  
 	}, false);
 	
 	eventSource.addEventListener('User created', function(e) {
-		console.log("received User created event: " + e.data);
+		//console.log("received User created event: " + e.data);
 		addUserRow($.parseJSON(e.data));  
 	}, false);
 
 	eventSource.addEventListener('User deleted', function(e) {
-		console.log("received User deleted event: " + e.data);
+		//console.log("received User deleted event: " + e.data);
 		deleteUserRow($.parseJSON(e.data));  
 	}, false);	
 }
@@ -94,6 +92,8 @@ function processUserList(users) {
 	$.each(users, function(i, user) {
 		addUserRow(user);
 	});
+	
+	startEventListeners();
 }
 
 function addUserRow(user) {

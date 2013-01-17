@@ -26,6 +26,9 @@ public interface UserRepository {
 	@Query(value = "{'userName': ?0}", fields = "{'userName': 1, 'firstName':1, 'lastName':1, 'emailAddress':1 }")	
 	User getUserInfo(String userName);
 
+	@Query(value = "{'emailAddress': ?0}", fields = "{'password':0}")	
+	User findByEmailAddress(String emailAddress);
+
 	Long count();
 
 	void delete(User user);

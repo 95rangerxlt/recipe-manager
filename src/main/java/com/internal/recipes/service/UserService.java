@@ -10,6 +10,8 @@ public interface UserService {
 	
 	User findByUserName(String userName);
 	
+	User findByEmailAddress(String emailAddress);
+	
 	User findOne(String primaryKey);
 	
 	User updateUser(User user);

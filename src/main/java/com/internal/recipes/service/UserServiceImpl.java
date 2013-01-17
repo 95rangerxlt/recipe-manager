@@ -11,6 +11,7 @@ import com.internal.recipes.domain.EventLog;
 import com.internal.recipes.domain.EventType;
 import com.internal.recipes.domain.RecipeManagerEvent;
 import com.internal.recipes.domain.User;
+import com.internal.recipes.exception.UserEmailAddressNotFoundException;
 import com.internal.recipes.exception.UserNameNotUniqueException;
 import com.internal.recipes.repository.UserRepository;
 
@@ -41,6 +42,14 @@ public class UserServiceImpl implements UserService {
 		User user = userRepository.findByUserName(userName);
 		if (user == null) {
 			throw new UsernameNotFoundException("user: " + userName + " does not exist");
+		}
+		return user;
+	}
+	
+	public User findByEmailAddress(String emailAddress) {
+		User user = userRepository.findByEmailAddress(emailAddress);
+		if (user == null) {
+			throw new UserEmailAddressNotFoundException(emailAddress);
 		}
 		return user;
 	}

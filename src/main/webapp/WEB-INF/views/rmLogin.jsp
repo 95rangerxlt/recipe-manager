@@ -1,5 +1,6 @@
 <%@ include file="/resources/frameworks/topFramework.html" %>
 <link rel="stylesheet" href="resources/css/rmLogin.css" />
+<script src="resources/js/rmLogin.js" type="text/javascript"></script>
 
 
 <div id="container">
@@ -37,50 +38,21 @@
 	</div>
 </div>
 
+<div id="forgotAccountForm" title="" style="display:none;margin-top:5px;">
+	<input id="actionType" type="hidden" value="" />
+	<div id="forgotAccountFormErrors" style="display:none;margin:0px;"></div>
+	
+ 	<p style="text-align:left;">Please enter the <b>email address</b> associated with your 
+         account here.  An email will be sent to you with instructions for retrieving your account.</p>
+
+	<table>
+	  <tr><td align="left"><b>Email Address:</b></td></tr>
+	  <tr><td align="left"><input type="email" id="email" placeholder="ie. john.doe@yahoo.com" title="Enter a valid email address" name="user[email]" size="30" value="" /></td></tr>
+	</table>
+</div>
 
 </body>
 </html>
 
-<script type="text/javascript">
-$(document).ready(function() {
-    $(".signin").click(function(e) {
-        e.preventDefault();
-        $("fieldset#signin_menu").toggle();
-        $(".signin").toggleClass("menu-open");
-    });
 
-    $("fieldset#signin_menu").mouseup(function() {
-        return false
-    });
-    $(document).mouseup(function(e) {
-        if($(e.target).parent("a.signin").length==0) {
-            $(".signin").removeClass("menu-open");
-            $("fieldset#signin_menu").hide();
-        }
-    });            
-
-	var loginError =  getURLParameter("login_error");
-	if(loginError) {
-		$("#loginError").html("Login Failed, Reason: " + loginError).show();
-        $("fieldset#signin_menu").toggle();
-        $(".signin").toggleClass("menu-open");
-	}
-	else
-		$("#loginError").html("").hide();
-	
-
-});
-
-function getURLParameter(name) {
-    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
-}
-
-function forgotPassword() {
-	alert("Sucks to be you!");
-}
-
-function forgotUsername() {
-	alert("That really sucks!")
-}
-</script>
 

@@ -9,6 +9,10 @@
 	<http auto-config="true" use-expressions="true">
 
 	    <intercept-url pattern="/rmLogin" access="permitAll" />
+	    <intercept-url pattern="/users/getUserByEmailAddress/**" access="permitAll" />	    
+	    <intercept-url pattern="/users/recoverAccountPassword/**" access="permitAll" />	    
+	    <intercept-url pattern="/users/recoverAccountUsername/**" access="permitAll" />	    
+	    
 		<intercept-url pattern="/**" access="hasAnyRole('ROLE_ADMINISTRATOR', 'ROLE_USER', 'ROLE_GUEST')" />
 
         <form-login 
