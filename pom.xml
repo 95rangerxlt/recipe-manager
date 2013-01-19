@@ -161,37 +161,37 @@
 			<version>1.0</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.http</groupId>
+			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore</artifactId>
 			<version>4.1.4</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.http.client</groupId>
+			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpclient</artifactId>
 			<version>4.1.3</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons.codec</groupId>
+			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.3</version>
 		</dependency>
 		<dependency>
-			<groupId>org.json.simple</groupId>
+			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons.lang</groupId>
+			<groupId>commons-lang</groupId>
 			<artifactId>commons-lang</artifactId>
 			<version>2.4</version>
 		</dependency>		
 		<dependency>
-			<groupId>org.apache.commons.fileupload</groupId>
+			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.2.2</version>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.commons.io</groupId>
+			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
 			<version>2.4</version>
 		</dependency>
