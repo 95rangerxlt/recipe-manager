@@ -1,7 +1,10 @@
 package com.internal.recipes.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
+
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,11 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.internal.recipes.domain.CloudFilesObject;
 import com.internal.recipes.domain.Recipe;
 import com.internal.recipes.domain.User;
 import com.internal.recipes.exception.RecipeDoesNotExistException;
 import com.internal.recipes.security.RecipeUserDetails;
+import com.internal.recipes.service.CloudFilesService;
 import com.internal.recipes.service.RecipeService;
 import com.internal.recipes.service.UserService;
 
@@ -34,6 +40,9 @@ public class RecipeController {
 	
 	@Autowired 
 	private UserService userService;
+	
+	@Autowired
+	private CloudFilesService cloudFilesService;
 
 	private static final Logger logger = LoggerFactory.getLogger(RecipeController.class);
 
@@ -45,7 +54,7 @@ public class RecipeController {
 		List<Recipe> recipes = recipeService.getAllRecipes();
 		return recipes;
 	}
-
+	
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public @ResponseBody
 	Recipe getRecipe(@PathVariable("id") final String id) throws RecipeDoesNotExistException {
@@ -91,6 +100,32 @@ public class RecipeController {
 		recipeService.delete(recipe);
 		return recipe;
 	}
+	
+	@RequestMapping(value="/uploadFile", method=RequestMethod.POST)
+	public @ResponseBody String uploadFile(MultipartFile file, String basename, String target)  {
+		
+		logger.info("Request to upload a file, name is {}, target is {}", basename, target);
+		cloudFilesService.storeObject(file, target, basename);
+		
+		try {
+			File f = new File("/tmp/herbcooking/" + basename);
+			file.transferTo(f);
+		} catch (IllegalStateException e) {
+			logger.info("exception:{}", e.getMessage());
+		} catch (IOException e) {
+			logger.info("exception:{}", e.getMessage());
+		}
+	 
+		return basename;
+	}
+	
+	@RequestMapping(value="/recipePics/{id}", method = RequestMethod.GET)
+	public @ResponseBody
+	List<CloudFilesObject> getAllRecipePics(@PathVariable("id") String recipeId) {
+		logger.info("Request to get all recipe pics for id: {}", recipeId);
+		return cloudFilesService.getObjects(recipeId + "/pics");
+	}
+
 
 	@ExceptionHandler({ RecipeDoesNotExistException.class })
 	ResponseEntity<String> handleNotFounds(Exception e) {

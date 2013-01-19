@@ -57,12 +57,12 @@ function processRecipeList(data) {
 function addRecipeRow(recipe) {
 	if ($("#" + recipe.recipeId + "_contributer").length > 0)
 		return;
-	
     var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '')  + "'" + ');">' + recipe.contributerUserName + '</a></div>' : "";
+	var tlink = "<a href=\"recipeDetails?recipeId=" + recipe.recipeId + "\">" + recipe.title + "<a>";
     var mlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeForm(' + "'" + recipe.recipeId +  "'" + ');">Modify</a></div>';
     var dlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeDeleteForm(' + "'" + recipe.recipeId + "'" + ');">Delete</a></div>';
     var newRow = recipesTable.dataTable().fnAddData([clink,
-                                                     recipe.title,
+                                                     tlink,
                                                      recipe.description,
                                                      '<a target="_blank" href="' + recipe.url + '">' + recipe.url + '</a>',
                                                      recipe.notes,

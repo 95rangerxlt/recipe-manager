@@ -15,7 +15,7 @@ import com.internal.recipes.util.SendGridParameters;
 @Service
 public class EmailServiceImpl implements EmailService {
 	
-	protected static Logger logger = Logger.getLogger("service");
+	protected static Logger logger = Logger.getLogger(EmailService.class);
 	private RestTemplate restTemplate = new RestTemplate();
 	
 	private @Value("${sendGrid.apiUsername}") String apiUsername;

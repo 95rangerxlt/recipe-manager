@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.internal.recipes.domain.Recipe;
@@ -63,4 +64,11 @@ public class HomeController {
 		logger.info("Request for the myAccountManager");		
 		return "myAccountManager";
 	}
+	
+	@RequestMapping(value = "recipeDetails", method = RequestMethod.GET)
+	public String getRecipeDetailsPage(@RequestParam(value="recipeId", required=true) String recipeId) {
+		logger.info("Request to show recipe details page");				
+		return "recipeDetails";
+	}
+
 }
