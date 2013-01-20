@@ -32,35 +32,10 @@
   .ui-widget { font-family: segoe ui, Arial, sans-serif; font-size: .95em; }
 </style>
 
-<div class="demo_jui" style="margin:20px;" >
-<div id="recipeForm" title="" style="display:none;margin-top:5px;">
-  <input type="text" style="display:none" value="" id="recipeContributerId" />
-  <div id="recipeFormErrors" style="display:none;margin:0px;"><div class="error"></div></div>
-  <table width="100%" class="display" cellspacing="0" cellpadding="0"><tbody>
-    <tr><td><b>Title</b></td><td><b>URL</b></td></tr>
-    <tr>
-      <td valign="top"><input type="text" required id="recipeTitle" size="55" value=""/></td>
-      <td valign="top"><input type="url" id="recipeUrl" placeholder="http://www.baltimoreravens.com" size="60" value=""/></td>
-    </tr>
-    <tr style="height:10px;"><td colspan="3"></td></tr>
-    <tr><td colspan="3"><b>Notes</b></td></tr>
-    <tr><td colspan="3"><textarea rows="3" cols="100" title="Enter a brief description"  id="recipeNotes"  value=""></textarea></td></tr>
-    <tr style="height:10px;"><td colspan="3"></td></tr>
-    <tr><td colspan="3"><b>Description</b></td></tr>
-    <tr><td colspan="3"><textarea rows="8" cols="100" title="Enter a brief description"  id="recipeDescription"  value=""></textarea></td></tr>
-  </tbody></table>
-</div>
-</div>
 
-<div id="recipeDeleteForm" title="" style="display:none;margin-top:5px;">
-  <input type="text" style="display:none" id="recipeId" value="0" />
-  <div id="recipeDeleteFormErrors" style="display:none;margin:0px;"></div>
-</div>
 
 
 <%@ include file="/resources/frameworks/bottomFramework.html" %>
+<%@ include file="/resources/frameworks/recipeForms.html" %>
 <%@ include file="/resources/frameworks/userInfoForm.html" %>
 <%@ include file="/resources/frameworks/emailMessageForm.html" %>
- 
-
-

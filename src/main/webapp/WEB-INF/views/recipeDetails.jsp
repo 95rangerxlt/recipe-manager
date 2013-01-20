@@ -1,4 +1,7 @@
 <%@ include file="/resources/frameworks/topFramework.html" %>
+
+<script src="resources/js/recipeDetails.js" type="text/javascript"></script>
+<script src="resources/js/recipeManager.js" type="text/javascript"></script>
 <script src="resources/js/userInfoForm.js" type="text/javascript"></script>
 
 <!-- Load Pluploader Queue widget CSS and jQuery -->
@@ -47,129 +50,21 @@
 	<p>You browser doesn't have Flash, Silverlight, Gears, BrowserPlus or HTML5 support.</p>
 </div>
 
-<div><h3>Uploaded Pics go here</h3></div>
+<div>
+<h3 style="font-size:1.5em;">Uploaded Pics for this Recipe</h3>
+<table id ="recipePicsTable"><tbody></tbody></table>
+</div>
 
 </div>
 
+<div id="recipePicDeleteForm" title="" style="display:none;margin-top:5px;">
+  <input style="display:none;" id = "recipedPicDeleteId"/>
+  <div id="recipePicDeleteFormErrors" style="display:none;margin:0px;"></div>
+  <div style="text-align:center;"><img height="150" width="150" id="recipePicDeleteFormImage"/></div>
+</div>
+
+<%@ include file="/resources/frameworks/recipeForms.html" %>
 <%@ include file="/resources/frameworks/bottomFramework.html" %>
 <%@ include file="/resources/frameworks/userInfoForm.html" %>
 <%@ include file="/resources/frameworks/emailMessageForm.html" %>
  
-<script type="text/javascript">
-var recipeId;
-
-$(document).ready(function () {
-	  $("#eventLogButton").button();
-	  $("#eventLogButton").click(function() { location.href = 'eventLogManager'; });
-	  $("#recipesButton").button();
-	  $("#recipesButton").click(function() { location.href = 'recipeManager'; });
-	  $("#logoutButton").button();
-	  $("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });
-	  $("#usersButton").button();
-	  $("#usersButton").click(function() { location.href = 'userManager'; });
-	  $("#myAccountButton").button();
-	  $("#myAccountButton").click(function() { location.href = 'myAccountManager'; });
-	  $("#uploadPicsButton").button();
-	  $("#uploadPicsButton").click(function() { $("#uploader").toggle(); });
-
-	  recipeDetailsTable = $('#recipeDetailsTable').dataTable({
-		"bJQueryUI": true,
-		"iDisplayLength": 25,
-		"sPaginationType": "full_numbers",
-		"sDom": '<"fg-toolbar ui-toolbar ui-widget-header ui-corner-tl ui-corner-tr ui-helper-clearfix"lfr>t<"fg-toolbar ui-toolbar ui-widget-header ui-corner-bl ui-corner-br ui-helper-clearfix"ip>'
-	  });
-	
-	$("#uploader").hide();
-	  
-	recipeId = getURLParameter("recipeId");
-	$.get('recipes/' + recipeId, function(data) {addRecipeRow(data);});  
-	$.get('recipes/recipePics/' + recipeId, function(data) {addRecipePics(data);});  
-	
-});
-
-function getURLParameter(name) {
-    return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search)||[,""])[1].replace(/\+/g, '%20'))||null;
-}
-
-function addRecipeRow(recipe) {
-	if ($("#" + recipe.recipeId + "_contributer").length > 0)
-		return;
-	
-    var clink = recipe.contributerUserName != "" ? '<div style="margin-top:3px;"><a href="javascript:showUserInfoForm(' + "'" + recipe.contributerUserName +  "','" + recipe.title.replace(/'/g, '')  + "'" + ');">' + recipe.contributerUserName + '</a></div>' : "";
-    var mlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeForm(' + "'" + recipe.recipeId +  "'" + ');">Modify</a></div>';
-    var dlink = '<div style="margin-top:3px;"><a href="javascript:showRecipeDeleteForm(' + "'" + recipe.recipeId + "'" + ');">Delete</a></div>';
-    var newRow = recipeDetailsTable.dataTable().fnAddData([clink,
-                                                     	  recipe.title,
-                                                     	  recipe.description,
-                                                     	  '<a target="_blank" href="' + recipe.url + '">' + recipe.url + '</a>',
-                                                     	  recipe.notes,
-                                                          mlink + dlink]); 
-    
-    // update the dom for this new tr so we have the ids set correctly
-    var newTr = recipeDetailsTable.fnSettings().aoData[ newRow[0] ].nTr;
-    var idp = recipe.recipeId + "_";
-    newTr.cells[0].id = idp + "contributer";
-    newTr.cells[1].id = idp + "title";
-    newTr.cells[2].id = idp + "description";
-    newTr.cells[3].id = idp + "url";
-    newTr.cells[4].id = idp + "notes";	
-}
-function addRecipePics(cfObjects) {
-	$.each(cfObjects, function(i, cfObject) {
-		console.log(cfObject);
-	});
-}
-
-
-$(function() {
-	$("#uploader").plupload({
-		// General settings
-		runtimes : 'gears,flash,silverlight,browserplus,html5',
-		url : 'recipes/uploadFile',
-		max_file_size : '2mb',
-		chunk_size : '1mb',
-		unique_names : true,
-		
-	    multipart_params: {'target': recipeId},
-
-		// Specify what files to browse for
-		filters : [
-			{title : "Image files", extensions : "jpg,gif,png"}
-		],
-		
-	    preinit : {
-	        UploadFile: function(up, file) {
-	          target = recipeId + "/pics";
-	          up.settings.multipart_params = {target: target, basename: file.name};
-	        }
-	      },
-
-
-		// Flash settings
-		flash_swf_url : 'resources/js/plupload/plupload.flash.swf',
-
-		// Silverlight settings
-		silverlight_xap_url : 'resources/js/plupload/plupload.silverlight.xap'
-	});
-
-	// Client side form validation
-	$('form').submit(function(e) {
-        var uploader = $('#uploader').plupload('getUploader');
-
-        // Files in queue upload them first
-        if (uploader.files.length > 0) {
-            // When all files are uploaded submit form
-            uploader.bind('StateChanged', function() {
-                if (uploader.files.length === (uploader.total.uploaded + uploader.total.failed)) {
-                    $('form')[0].submit();
-                }
-            });
-                
-            uploader.start();
-        } else
-            alert('You must at least upload one file.');
-
-        return false;
-    });
-});
-</script>

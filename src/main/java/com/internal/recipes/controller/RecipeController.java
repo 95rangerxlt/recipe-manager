@@ -1,7 +1,5 @@
 package com.internal.recipes.controller;
 
-import java.io.File;
-import java.io.IOException;
 import java.security.Principal;
 import java.util.List;
 
@@ -25,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.internal.recipes.domain.CloudFilesObject;
 import com.internal.recipes.domain.Recipe;
 import com.internal.recipes.domain.User;
+import com.internal.recipes.exception.CloudFilesException;
 import com.internal.recipes.exception.RecipeDoesNotExistException;
 import com.internal.recipes.security.RecipeUserDetails;
 import com.internal.recipes.service.CloudFilesService;
@@ -102,21 +101,13 @@ public class RecipeController {
 	}
 	
 	@RequestMapping(value="/uploadFile", method=RequestMethod.POST)
-	public @ResponseBody String uploadFile(MultipartFile file, String basename, String target)  {
+	public @ResponseBody CloudFilesObject uploadFile(MultipartFile file, String basename, String target)  {
 		
 		logger.info("Request to upload a file, name is {}, target is {}", basename, target);
-		cloudFilesService.storeObject(file, target, basename);
-		
-		try {
-			File f = new File("/tmp/herbcooking/" + basename);
-			file.transferTo(f);
-		} catch (IllegalStateException e) {
-			logger.info("exception:{}", e.getMessage());
-		} catch (IOException e) {
-			logger.info("exception:{}", e.getMessage());
-		}
-	 
-		return basename;
+		CloudFilesObject cfo = cloudFilesService.storeObject(file, target, basename);
+		logger.info("uploaded file {} {}", cfo.getName(), cfo.getCDNURL());
+ 
+		return cfo;
 	}
 	
 	@RequestMapping(value="/recipePics/{id}", method = RequestMethod.GET)
@@ -126,9 +117,23 @@ public class RecipeController {
 		return cloudFilesService.getObjects(recipeId + "/pics");
 	}
 
+	@RequestMapping(value = "/recipePics", method = RequestMethod.DELETE)
+	@ResponseStatus(HttpStatus.OK)
+	public @ResponseBody
+	CloudFilesObject deleteRecipePic(@RequestBody CloudFilesObject cfObject) throws RecipeDoesNotExistException {
+		logger.info("Request to delete a recipe pic with objectName {}", cfObject.getName());
+		return cloudFilesService.deleteObject(cfObject.getName());
+	}
+
 
 	@ExceptionHandler({ RecipeDoesNotExistException.class })
 	ResponseEntity<String> handleNotFounds(Exception e) {
+		logger.error(e.getMessage());
+		return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
+	}
+
+	@ExceptionHandler({ CloudFilesException.class })
+	ResponseEntity<String> handleCloudFilesException(Exception e) {
 		logger.error(e.getMessage());
 		return new ResponseEntity<String>(e.getMessage(), HttpStatus.NOT_FOUND);
 	}

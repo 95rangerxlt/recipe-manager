@@ -2,7 +2,12 @@
  var recipesTable;
  var eventSource;
  
-$(document).ready(function () {
+ $(document).ready(function () {
+	  // only call from the recipe admin page, not from recipe details page
+	  if ($("#recipesTable").length == 0)
+		  return;
+
+	 
 	  $("#addRecipeButton").button();
 	  $("#addRecipeButton").click(function() { showRecipeForm(0); return false; });
 	  $("#eventLogButton").button();
@@ -25,7 +30,7 @@ $(document).ready(function () {
 	$.get('recipes', function(data) {processRecipeList(data);});  
 	
 });
-
+ 
 function startEventListeners() {
 	// start listening for recipe events
 	eventSource = new EventSource('sse');

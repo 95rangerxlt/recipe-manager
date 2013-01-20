@@ -6,14 +6,14 @@ public class CloudFilesObject {
     private long size = -1;
     private String mimeType = null;
     private String lastModified = null;
-    private String getCDNURL;
+    private String CDNURL;
     
-	public String getGetCDNURL() {
-		return getCDNURL;
+	public String getCDNURL() {
+		return CDNURL;
 	}
 
-	public void setGetCDNURL(String getCDNURL) {
-		this.getCDNURL = getCDNURL;
+	public void setCDNURL(String CDNURL) {
+		this.CDNURL = CDNURL;
 	}
 
 	public String getLastModified() {
