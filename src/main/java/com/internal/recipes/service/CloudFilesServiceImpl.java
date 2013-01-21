@@ -1,5 +1,7 @@
 package com.internal.recipes.service;
 
+import java.net.FileNameMap;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,13 +51,15 @@ public class CloudFilesServiceImpl implements CloudFilesService {
 	    CloudFilesObject cfo = new CloudFilesObject();
 
 	    try {
-		    filesClient.storeObject(rootContainer, file.getBytes(), file.getContentType(), path + "/" + filename, new HashMap<String,String>());
+	    	FileNameMap fileNameMap = URLConnection.getFileNameMap();
+	        String contentType = fileNameMap.getContentTypeFor(filename);
+		    filesClient.storeObject(rootContainer, file.getBytes(), contentType, path + "/" + filename, new HashMap<String,String>());
 		    List<FilesObject> fileObjects = filesClient.listObjectsStartingWith(rootContainer, path + "/" + filename, null, 1, null);
 			FilesObject fo = fileObjects.get(0);		    
 			cfo.setName(fo.getName());
 			cfo.setLastModified(fo.getLastModified());
 			cfo.setMd5sum(fo.getMd5sum());
-			cfo.setMimeType(fo.getMimeType());
+			cfo.setMimeType(contentType);
 			cfo.setCDNURL(fo.getCDNURL());
 			cfo.setSize(fo.getSize());
 		    

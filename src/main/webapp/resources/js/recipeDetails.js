@@ -131,8 +131,8 @@ $(function() {
 		// General settings
 		runtimes : 'gears,flash,silverlight,browserplus,html5',
 		url : 'recipes/uploadFile',
-		max_file_size : '2mb',
-		chunk_size : '1mb',
+		max_file_size : '10mb',
+		//chunk_size : '1mb',
 		unique_names : true,
 		
 	    multipart_params: {'target': recipeId},
