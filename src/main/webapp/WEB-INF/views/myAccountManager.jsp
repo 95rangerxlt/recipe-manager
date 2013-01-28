@@ -11,7 +11,7 @@
 
 <div id="userForm" title="" style="display:none;margin-top:5px;">
   <div id="userFormErrors" style="display:none;margin:0px;"></div>
-  <table width="100%" cellspacing="0" cellpadding="0"><tbody>
+  <table id="myAccountInfo"><tbody>
     <tr><td colspan="3" style="height:20px;color:blue;font-size:1.1em;">General</td></tr>  
     <tr>
       <td><b>First Name:</b></td>
@@ -19,9 +19,9 @@
       <td><b>Email Address</b></td>
     </tr>
     <tr>
-      <td><input type="text" id="firstName" size="30" pattern="[a-zA-Z0-9]{3,}" title="Minimum 3 letters or numbers." required value=""/></td>
-      <td><input type="text" id="lastName" size="30" pattern="[a-zA-Z0-9]{3,}" title="Minimum 3 letters or numbers." required value=""/></td>
-      <td><input title="Enter a valid email address" type="email" placeholder="ie. johndoe@yahoo.com" id="emailAddress" required size="40" value=""/></td>
+      <td><input data-bind="value: firstName" type="text"  size="30" pattern="[a-zA-Z0-9]{3,}" title="Minimum 3 letters or numbers." required value=""/></td>
+      <td><input type="text" data-bind="value: lastName" id="lastName" size="30" pattern="[a-zA-Z0-9]{3,}" title="Minimum 3 letters or numbers." required value=""/></td>
+      <td><input title="Enter a valid email address" type="email" data-bind="value: emailAddress" placeholder="ie. johndoe@yahoo.com" id="emailAddress" required size="40" value=""/></td>
     </tr>
     <tr style="height:10px;"><td colspan="3"></td></tr>
     <tr>
@@ -31,9 +31,9 @@
       <td></td>
     </tr>
     <tr>
-      <td><input type="text" id="userName" readonly size="30" pattern="[a-zA-Z0-9]{5,}" title="Minimum 5 letters or numbers." /></td>     
-      <td><input id="password" name="password" size="30" type="password" pattern=".{5,}" title="Minmimum 5 letters or numbers." required></td>
-      <td><input id="passwordConfirm" name="password" size="30" type="password" pattern=".{5,}" title="Minmimum 5 letters or numbers." required value=""/></td>
+      <td><input type="text" data-bind="value: userName" id="userName" readonly size="30" pattern="[a-zA-Z0-9]{5,}" title="Minimum 5 letters or numbers." /></td>     
+      <td><input id="password" name="password" size="30" type="password" data-bind="value: password" pattern=".{5,}" title="Minmimum 5 letters or numbers." required></td>
+      <td><input id="passwordConfirm" name="password" size="30" type="password" data-bind="value: confirmPassword" pattern=".{5,}" title="Minmimum 5 letters or numbers." required value=""/></td>
       <td></td>
     </tr>
   </tbody></table>

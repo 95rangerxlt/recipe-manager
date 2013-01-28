@@ -1,7 +1,18 @@
- // globals
- var myUserObject;
+// globals
+var userInfoViewModel;
  
- 
+function UserInfoViewModel(){
+	id = ko.observable();
+	password = ko.observable();
+	confirmPassword = ko.observable();
+	userName = ko.observable();
+	firstName = ko.observable();
+	lastName = ko.observable();
+	emailAddress = ko.observable();
+	roles = ko.observable();	
+}
+
+
 $(document).ready(function () {
 	$("#logoutButton").button();
 	$("#logoutButton").click(function() { location.href = 'j_spring_security_logout'; });
@@ -13,13 +24,23 @@ $(document).ready(function () {
 	$("#usersButton").click(function() { location.href = 'userManager'; });
 
 	userFormInit();
-  
-	$.ajax({
-	    type: 'GET',
-	    url: 'users/currentUser',
-	    success: function(data) {myUserObject = data; showUserForm(data);},
-	    error : function(request, status, error) {alert("Failed: " + error);}
-	});		
+	userInfoViewModel = new UserInfoViewModel();
+	
+    $.getJSON("users/currentUser", function(user) {
+	 	userInfoViewModel.id = user.id;
+	 	userInfoViewModel.userName = user.userName;
+	 	userInfoViewModel.firstName = user.firstName;
+	 	userInfoViewModel.lastName = user.lastName;
+	 	userInfoViewModel.emailAddress = user.emailAddress;
+	 	userInfoViewModel.password = user.password;
+	 	userInfoViewModel.confirmPassword = user.password;
+	 	userInfoViewModel.roles = user.roles; 
+
+    	$("#userForm").dialog("option", "title", "Modify my User Information");  
+	 	$('#userForm').dialog('open');   
+
+		ko.applyBindings(userInfoViewModel, $("#myAccountInfo")[0]);
+    }); 
 });
 
 function userFormInit() {
@@ -45,21 +66,6 @@ function userFormInit() {
 	    }
 	});
 }
-
-
-function showUserForm(user) {
-	 $("#userFormErrors").html("");
-	 $("#userName").prop('disabled', true);
-	 $('#userName').val(user.userName);
-	 $("#firstName").val(user.firstName);
-	 $("#lastName").val(user.lastName);
-	 $("#emailAddress").val(user.emailAddress);
-	 $("#password").val("");
-	 $("#passwordConfirm").val("");
-	 $("#userForm").dialog("option", "title", "Modify my User Information");  
-		 	 
-	 $('#userForm').dialog('open');
-}
 function processSubmit() {
 	if (! validate()) {
 	  $("#userFormErrors").show();
@@ -67,57 +73,56 @@ function processSubmit() {
 	}
 	
 	// got this far, do the post and check for errors 
-	$("#userFormErrors").append("<div class=\"success\">Saving...</div>");
+	$("#userFormErrors").append("<div class=\"success\">Saving...</div>");	
 	
-	user = new Object();
-	user.id = myUserObject.id;
-	user.password = $("#password").val();
-	user.userName = $("#userName").val();
-	user.emailAddress = $("#emailAddress").val();
-	user.firstName = $("#firstName").val();
-	user.lastName = $("#lastName").val();
-	user.roles = myUserObject.roles;
-			
+	var userInfoObject = new Object();
+	userInfoObject.id = userInfoViewModel.id;
+	userInfoObject.userName = userInfoViewModel.userName;
+	userInfoObject.firstName = userInfoViewModel.firstName;
+	userInfoObject.lastName = userInfoViewModel.lastName;
+	userInfoObject.emailAddress = userInfoViewModel.emailAddress;
+	userInfoObject.password = userInfoViewModel.password;
+	userInfoObject.roles = userInfoViewModel.roles; 
+				
 	$.ajax({
 	       type: 'PUT',
 	       url: 'users/myAccount',
            contentType: "application/json; charset=utf-8",
            dataType: "json",
-	       data: JSON.stringify(user),
+	       data: ko.toJSON(userInfoObject),
 	       success: function(data) {processSubmitResults(data);},
 	       error: function(xhr,err) {
-	    	   alert("post data: " + JSON.stringify(user));
+	    	   alert("post data: " + ko.toJSON(userInfoObject));
 	    	   alert("readyState: "+xhr.readyState+"\nstatus: "+xhr.status);
 	    	   alert("responseText: "+xhr.responseText);
 	    	   $('#userForm').dialog('close');
-	    	}
-	       
+	    	}	       
 	});			    
 }
 function validate() {
 	  $("#userFormErrors").html("");
 	  var returnVal = true;
-	  if ($("#firstName").val() == "") {
+	  if (userInfoViewModel.firstName == "") {
 	    $("#userFormErrors").append("<div class=\"error\">Please enter the user's <b>First Name</b>.</div>");
 	    returnVal = false;
 	  }
-	  if ($("#lastName").val() == "") {
+	  if (userInfoViewModel.lastName == "") {
 	    $("#userFormErrors").append("<div class=\"error\">Please enter the user's <b>Last Name</b>.</div>");
 	    returnVal = false;
 	  }
-	  if ($("#emailAddress").val() == "") {
+	  if (userInfoViewModel.emailAddress == "") {
 	    $("#userFormErrors").append("<div class=\"error\">Please enter the user's <b>Email Address</b>.</div>");
 	    returnVal = false;
 	  }
-	  if ($("#password").val() == "") {
+	  if (userInfoViewModel.password == "") {
 	    $("#userFormErrors").append("<div class=\"error\">Please enter a valid <b>Password</b>.</div>");
 	    returnVal = false;
 	  }
-	  if ($("#passwordConfirm").val() == "") {
+	  if (userInfoViewModel.confirmPassword == "") {
 		    $("#userFormErrors").append("<div class=\"error\">Please enter a valid <b>Password Confirm</b>.</div>");
 		    returnVal = false;
 	  }
-	  if ($("#password").val() != $("#passwordConfirm").val()) {
+	  if (userInfoViewModel.password != userInfoViewModel.confirmPassword) {
 		    $("#userFormErrors").append("<div class=\"error\"><b>Password</b> and <b>Confirm Password</b> values do not match!</div>");
 		    returnVal = false;		  
 	  }
