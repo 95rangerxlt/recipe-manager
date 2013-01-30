@@ -19,9 +19,9 @@
       <td><b>Email Address</b></td>
     </tr>
     <tr>
-      <td><input data-bind="value: firstName" type="text"  size="30" pattern="[a-zA-Z0-9]{3,}" title="Minimum 3 letters or numbers." required value=""/></td>
-      <td><input type="text" data-bind="value: lastName" id="lastName" size="30" pattern="[a-zA-Z0-9]{3,}" title="Minimum 3 letters or numbers." required value=""/></td>
-      <td><input title="Enter a valid email address" type="email" data-bind="value: emailAddress" placeholder="ie. johndoe@yahoo.com" id="emailAddress" required size="40" value=""/></td>
+      <td><input data-bind="value: firstName" type="text" size="30" pattern="[a-zA-Z0-9]{3,}" title="Minimum 3 letters or numbers." required value=""/></td>
+      <td><input data-bind="value: lastName" type="text" id="lastName" size="30" pattern="[a-zA-Z0-9]{3,}" title="Minimum 3 letters or numbers." required value=""/></td>
+      <td><input data-bind="value: emailAddress" title="Enter a valid email address" type="email" placeholder="ie. johndoe@yahoo.com" id="emailAddress" required size="40" value=""/></td>
     </tr>
     <tr style="height:10px;"><td colspan="3"></td></tr>
     <tr>
@@ -31,9 +31,9 @@
       <td></td>
     </tr>
     <tr>
-      <td><input type="text" data-bind="value: userName" id="userName" readonly size="30" pattern="[a-zA-Z0-9]{5,}" title="Minimum 5 letters or numbers." /></td>     
-      <td><input id="password" name="password" size="30" type="password" data-bind="value: password" pattern=".{5,}" title="Minmimum 5 letters or numbers." required></td>
-      <td><input id="passwordConfirm" name="password" size="30" type="password" data-bind="value: confirmPassword" pattern=".{5,}" title="Minmimum 5 letters or numbers." required value=""/></td>
+      <td><input data-bind="value: userName" type="text" id="userName" readonly size="30" pattern="[a-zA-Z0-9]{5,}" title="Minimum 5 letters or numbers." /></td>     
+      <td><input data-bind="value: password" id="password" name="password" size="30" type="password"  pattern=".{5,}" title="Minmimum 5 letters or numbers." required></td>
+      <td><input data-bind="value: confirmPassword" id="passwordConfirm" name="password" size="30" type="password" pattern=".{5,}" title="Minmimum 5 letters or numbers." required value=""/></td>
       <td></td>
     </tr>
   </tbody></table>
